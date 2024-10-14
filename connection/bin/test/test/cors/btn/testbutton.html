@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI 버튼 예제</title>
+    <script>
+        async function sendButtonValue(value) {
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ slider_value: value }),
+            });
+            const data = await response.json();
+            console.log(data.message);
+        }
+
+        function updateValue(value) {
+            // 버튼 클릭 시 호출되는 함수
+            sendButtonValue(value);
+
+            // currentValue 업데이트
+            document.getElementById('currentValue').textContent = `현재 값: ${value}`;
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const val = urlParams.get('val') || 0; // 기본값 0
+            document.getElementById('currentValue').textContent = `현재 값: ${val}`;
+        };
+    </script>
+</head>
+<body>
+    <h1>버튼 값 전송</h1>
+    <button onclick="updateValue(10)">10</button>
+    <button onclick="updateValue(20)">20</button>
+    <button onclick="updateValue(30)">30</button>
+    <p id="currentValue">현재 값: 0</p>
+</body>
+</html>

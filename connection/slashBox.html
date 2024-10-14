@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬래시 패턴 박스</title>
+    <style>
+        #colorBox {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            background-color: #ccc; /* 기본 색상 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-image: linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1));
+            background-size: 10px 10px; /* 슬래시 크기 조절 */
+        }
+        .color-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 바뀌는 블럭 -->
+<div id="colorBox"></div>
+
+<button class="color-button" style="background-color: #ff0000;" onclick="changeColor('#ff0000')">빨강</button>
+<button class="color-button" style="background-color: #0000ff;" onclick="changeColor('#0000ff')">파랑</button>
+<button class="color-button" style="background-color: #00ff00;" onclick="changeColor('#00ff00')">초록</button>
+<!-- <button class="color-button" style="background-color: transparent;" onclick="resetColor()">초기화</button> -->
+
+<script>
+    // 색 바꾸기
+    function changeColor(color) {
+        const colorBox = document.getElementById('colorBox');
+        colorBox.style.backgroundColor = color;
+        colorBox.style.backgroundImage = 'none'; // 배경 패턴 없애기
+        console.log(`선택된 색상: ${color}`); // 선택된 색상 HEX 코드 콘솔 로그 출력
+    }
+
+    // 처음으로로 초기화
+    // function resetColor() {
+    //     const colorBox = document.getElementById('colorBox');
+    //     colorBox.style.backgroundColor = '#ccc'; // 기본 색상으로 초기화
+    //     colorBox.style.backgroundImage = 'linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1))'; // 패턴 복원
+    // }
+</script>
+
+</body>
+</html>
+

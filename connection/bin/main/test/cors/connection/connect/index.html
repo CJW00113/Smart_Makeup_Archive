@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Feed</title>
+</head>
+<body>
+    <h1>Webcam Feed</h1>
+    <img id="video" src="" alt="Video Feed" style="width: 640px; height: 480px;"/>
+    
+    <script>
+        ///////// 비디오 연결 //////////
+        const videoElement = document.getElementById('video');
+        const websocket = new WebSocket('ws://127.0.0.1:8080/video-feed');
+
+        websocket.onmessage = function(event) {
+            const blob = new Blob([event.data], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            videoElement.src = url;
+        };
+
+        websocket.onclose = function(event) {
+            console.log('WebSocket closed:', event);
+        };
+    </script>
+</body>
+</html>

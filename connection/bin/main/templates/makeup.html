@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makeup Page</title>
+    <style>
+        #colorBox {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            background-color: #ccc; /* 기본 색상 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-image: linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1));
+            background-size: 10px 10px; /* 슬래시 크기 조절 */
+        }
+        .color-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        <h1>슬라이더 값 변경</h1>
+        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" />
+    </p>
+
+    <p>
+    <h1>버튼 값 전송</h1>
+        <!-- 바뀌는 박스 -->
+        <div id="colorBox"></div>
+        <button class="color-button" style="background-color: #ff0000;" onclick="changeColor('#ff0000'); changeColor('#ff0000');">빨강</button>
+        <button class="color-button" style="background-color: #0000ff;" onclick="changeColor('#0000ff'); changeColor('#0000ff');">파랑</button>
+        <button class="color-button" style="background-color: #00ff00;" onclick="changeColor('#00ff00'); changeColor('#00ff00');">초록</button>
+    </p>
+    <p id="currentValue">현재 값: 0</p>
+
+    <p>
+        <h3>바뀐 색상</h3>
+        <button id="colorButton" onclick="changeColor()" style="background-color: #FF0000;">
+            색상 변경
+        </button>
+    </p>
+
+    <p>
+        <h1>Webcam Feed</h1>
+        <img id="video" src="" alt="Video Feed" style="width: 640px; height: 480px;"/>
+    </p>
+
+    <script>
+        ////////////////// 슬라이더 값 POST로 전송 ///////////////////
+        function sendSliderValue(value) {
+            fetch('/slider', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ opacity: value })
+            });
+        }
+        //////////////////// 비디오 연결 //////////////////////
+        const videoElement = document.getElementById('video');
+        const websocket = new WebSocket('ws://127.0.0.1:8080/video-feed');
+
+        websocket.onmessage = function(event) {
+            const blob = new Blob([event.data], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            videoElement.src = url;
+        };
+
+        websocket.onclose = function(event) {
+            console.log('WebSocket closed:', event);
+        };
+
+        /////////////////// 버튼 값 POST로 전송 ///////////////////
+        function sendButtonValue(value) {
+            fetch('/btnColor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ hex: value })
+            });
+        }
+        ////////////////// 색 바꾸기 //////////////////
+        function changeColor(color) {
+            const colorBox = document.getElementById('colorBox');
+            colorBox.style.backgroundColor = color;
+            colorBox.style.backgroundImage = 'none'; // 배경 패턴 없애기
+            console.log(`선택된 색상: ${color}`); // 선택된 색상 HEX 코드 콘솔 로그 출력
+        }
+    </script>
+</body>
+</html>

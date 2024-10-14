@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬라이더로 값 전송하기</title>
+    <style>
+        .webcamStream {
+            width: 640px;  /* 원하는 너비 */
+            height: 480px; /* 원하는 높이 */
+            background-color: black; /* 기본 배경색 */
+            position: relative; /* 자식 요소의 위치를 위해 설정 */
+        }
+        .webcamStream div {
+            width: 100%;
+            height: 100%;
+            background-size: cover; /* 배경 이미지 크기 조정 */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .hidden {
+            display: none; /* 숨기기 위한 클래스 */
+        }
+    </style>
+    <!-- jQuery CDN 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <input type="range" id="slider" min="0" max="100" value="0">
+    <p>슬라이더 값: <span id="sliderValue">0</span></p>
+
+    <div class="webcamStream">
+        <div id="webcam" class="hidden"></div> <!-- 동적으로 배경 이미지를 설정 -->
+    </div>
+
+    <button id="connectButton">캠 연결</button>
+    <button id="disconnectButton" class="hidden">캠 해제</button>
+
+    <!-- <form action="/add" method="POST">
+        <button type="submit" name="number" value="#000000">Send 20</button>
+        <button type="submit" name="number" value="#444444">Send 30</button>
+        <button type="submit" name="number" value="#999999">Send 40</button>
+    </form> -->
+
+    <script>
+        //////////////////////////////// 슬라이더 값 전송만 ////////////////////////////////
+        // function sendValue() {
+        //     const slider = document.getElementById('slider');
+        //     const value = slider.value; // 슬라이더의 현재 값을 가져옴
+            
+        //     // AJAX 요청으로 데이터 전송
+        //     fetch(`/api/senddata?value=${value}`, {
+        //         method: 'GET',
+        //     })
+        //     .then(response => response.text())
+        //     .then(data => {
+        //         console.log('Response from server:', data);
+        //         // URL 변경
+        //         const newUrl = `/api/senddata?value=${value}`;
+        //         history.pushState(null, '', newUrl); // URL 변경 (페이지 이동 없음)
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+        // }
+        function sendValue() {
+            const slider = document.getElementById('slider');
+            const value = slider.value; // 슬라이더의 현재 값을 가져옴
+            
+            alert(value);
+
+            $.ajax({
+                url: "http://localhost:9090/submit",
+                type: 'GET',
+                success: function onData (data) {
+                    console.log(data);
+                },
+                error: function onError (error) {
+                    console.error(error);
+                }
+            })
+        }
+
+        //////////////////////////////// 슬라이더 값 변동 감지 ////////////////////////////////
+        window.onload = () => {
+            const slider = document.getElementById('slider');
+            const sliderValue = document.getElementById('sliderValue');
+
+            // 슬라이더 값 변경 시 업데이트 및 데이터 전송
+            slider.addEventListener('input', () => {
+                sliderValue.textContent = slider.value; // 슬라이더 값 업데이트
+                sendValue(); // 값이 변경될 때마다 전송
+            });
+
+            // // 페이지 로드 시 초기값 설정
+            // sliderValue.textContent = slider.value; // 초기값을 표시
+        };
+
+
+        //////////////////////////////// 캠 연결 부분 ////////////////////////////////
+        const webcam = document.getElementById('webcam');
+        const connectButton = document.getElementById('connectButton');
+        const disconnectButton = document.getElementById('disconnectButton');
+
+        let streamActive = false; // 스트림 상태 변수
+
+        // 캠 연결 버튼 클릭 시 스트림 URL 설정
+        connectButton.addEventListener('click', () => {
+            webcam.style.backgroundImage = 'url(http://localhost:8080/video_feed)'; // 캠 스트림 URL 설정
+            webcam.classList.remove('hidden'); // 박스 보이기
+            connectButton.classList.add('hidden'); // 연결 버튼 숨김
+            disconnectButton.classList.remove('hidden'); // 해제 버튼 표시
+            streamActive = true; // 스트림 상태 업데이트
+
+            // 이거  비동기 형식이라 작동 안되는거같음,,,,,,py파일 내부로 처리해야 할듯
+            // // 주기적으로 스트림 상태 체크
+            // const checkStream = setInterval(() => {
+            //     const img = new Image();
+            //     img.src = 'http://localhost:8080/video_feed';
+            //     img.onload = () => { streamActive = true; }; // 정상적으로 로드됨
+            //     img.onerror = () => {
+            //         if (streamActive) {
+            //             alert('캠이 강제로 연결 해제되었습니다.'); // 경고 창 표시
+            //             clearInterval(checkStream); // 체크 중지
+            //             webcam.style.backgroundImage = ''; // 스트림 해제
+            //             webcam.classList.add('hidden'); // 박스 숨기기
+            //             connectButton.classList.remove('hidden'); // 연결 버튼 표시
+            //             disconnectButton.classList.add('hidden'); // 해제 버튼 숨김
+            //             streamActive = false; // 상태 업데이트
+            //         }
+            //     };
+            // }, 2000); // 2초마다 체크
+        });
+
+        // 캠 해제 버튼 클릭 시
+        disconnectButton.addEventListener('click', () => {
+            webcam.style.backgroundImage = ''; // 스트림 해제
+            webcam.classList.add('hidden'); // 박스 숨기기
+            connectButton.classList.remove('hidden'); // 연결 버튼 표시
+            disconnectButton.classList.add('hidden'); // 해제 버튼 숨김
+            streamActive = false; // 상태 업데이트
+            alert('캠이 해제되었습니다.'); // 경고 창 표시
+        });
+    </script>
+</body>
+</html>
