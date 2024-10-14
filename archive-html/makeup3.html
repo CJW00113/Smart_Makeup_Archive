@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 스크립트 실행</title>
+    <style>
+        .webcamStream {
+            width: 640px;  /* 원하는 너비 */
+            height: 480px; /* 원하는 높이 */
+            background-color: black; /* 기본 배경색 */
+            position: relative; /* 자식 요소의 위치를 위해 설정 */
+        }
+        .webcamStream div {
+            width: 100%;
+            height: 100%;
+            background-size: cover; /* 배경 이미지 크기 조정 */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .hidden {
+            display: none; /* 숨기기 위한 클래스 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Python 스크립트 제어</h1>
+    <div class="webcamStream">
+        <div id="webcam" class="hidden"></div> <!-- 동적으로 배경 이미지를 설정 -->
+    </div>
+
+    <button id="connectButton">캠 연결</button>
+    <button id="disconnectButton" class="hidden">캠 해제</button>
+
+    <script>
+        const webcam = document.getElementById('webcam');
+        const connectButton = document.getElementById('connectButton');
+        const disconnectButton = document.getElementById('disconnectButton');
+
+        let streamActive = false; // 스트림 상태 변수
+
+        // 캠 연결 버튼 클릭 시 스트림 URL 설정
+        connectButton.addEventListener('click', () => {
+            webcam.style.backgroundImage = 'url(http://localhost:8080/video_feed)'; // 캠 스트림 URL 설정
+            webcam.classList.remove('hidden'); // 박스 보이기
+            connectButton.classList.add('hidden'); // 연결 버튼 숨김
+            disconnectButton.classList.remove('hidden'); // 해제 버튼 표시
+            streamActive = true; // 스트림 상태 업데이트
+
+            // 이거  비동기 형식이라 작동 안되는거같음,,,,,,py파일 내부로 처리해야 할듯
+            // // 주기적으로 스트림 상태 체크
+            // const checkStream = setInterval(() => {
+            //     const img = new Image();
+            //     img.src = 'http://localhost:8080/video_feed';
+            //     img.onload = () => { streamActive = true; }; // 정상적으로 로드됨
+            //     img.onerror = () => {
+            //         if (streamActive) {
+            //             alert('캠이 강제로 연결 해제되었습니다.'); // 경고 창 표시
+            //             clearInterval(checkStream); // 체크 중지
+            //             webcam.style.backgroundImage = ''; // 스트림 해제
+            //             webcam.classList.add('hidden'); // 박스 숨기기
+            //             connectButton.classList.remove('hidden'); // 연결 버튼 표시
+            //             disconnectButton.classList.add('hidden'); // 해제 버튼 숨김
+            //             streamActive = false; // 상태 업데이트
+            //         }
+            //     };
+            // }, 2000); // 2초마다 체크
+        });
+
+        // 캠 해제 버튼 클릭 시
+        disconnectButton.addEventListener('click', () => {
+            webcam.style.backgroundImage = ''; // 스트림 해제
+            webcam.classList.add('hidden'); // 박스 숨기기
+            connectButton.classList.remove('hidden'); // 연결 버튼 표시
+            disconnectButton.classList.add('hidden'); // 해제 버튼 숨김
+            streamActive = false; // 상태 업데이트
+            alert('캠이 해제되었습니다.'); // 경고 창 표시
+        });
+    </script>
+</body>
+</html>

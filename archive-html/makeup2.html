@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 스크립트 실행</title>
+    <style>
+        .webcamStream {
+            width: 640px;  /* 원하는 너비 */
+            height: 480px; /* 원하는 높이 */
+            background-color: black; /* 기본 배경색 */
+        }
+
+        .webcamStream.error {
+            background-color: black; /* 오류 발생 시 검정색 유지 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Python 스크립트 제어</h1>
+    <img class="webcamStream" src="http://localhost:8080/video_feed" alt="Webcam Stream" onerror="this.classList.add('error')">
+
+    <script>
+        // 추가 스크립트가 필요할 경우 여기에 작성
+    </script>
+</body>
+</html>
