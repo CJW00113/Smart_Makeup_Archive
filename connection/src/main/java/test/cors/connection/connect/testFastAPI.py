@@ -226,11 +226,6 @@ def is_camera_in_use(camera_index=0):
 
 ## 서버 실행 명령어 uvicorn main:app --reload
 if __name__ == "__main__":
-    uvicorn.run(app, port=8080)
-    ## 테스트용)
-    # uvicorn.run(app, host="127.0.0.1", port=8080, reload=False) # 디버깅아님
-    # uvicorn.run(app, host="127.0.0.1", port=8080, reload=True) # 디버깅모드임
-
     if is_camera_in_use():
         print("웹캠이 이미 사용 중입니다.")
     else:
@@ -245,6 +240,12 @@ if __name__ == "__main__":
     # print(f"opacity: {params['opacity']}, hex: {params['hex']}, bgr_color: {params['bgr_color']}")
     # print(f"opacity: {type(params['opacity'])}, hex: {type(params['hex'])}, bgr_color: {type(params['bgr_color'])}")
     # ## opacity: <class 'str'>, hex: <class 'str'>, bgr_color: <class 'tuple'> 으로 저장됨
+
+    ## 뒤에 있어야함. 그래야  txt 초기화 코드가 실행됨, 근데뭔가뭔가하자가있는듯함뭔가뭔가임기분탓같은데뭔가뭔가뭔가임
+    uvicorn.run(app, port=8080)
+    ## 테스트용)
+    # uvicorn.run(app, host="127.0.0.1", port=8080, reload=False) # 디버깅아님
+    # uvicorn.run(app, host="127.0.0.1", port=8080, reload=True) # 디버깅모드임
 
 ## 경로/docs 참고하면, 자동 대화형 API 문서 확인 가능
 

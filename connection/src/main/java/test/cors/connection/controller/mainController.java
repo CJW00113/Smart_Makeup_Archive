@@ -30,18 +30,7 @@ public class mainController {
 
     @GetMapping("/makeup")
     public String getMakeupPage() {
-        int port = 8080; // 포트설정
-
-        // Fast API가 실행중이 아닌경우 서버 실행
-        if (!pythonServerRunning) {
-            setPythonServerRunning(true);
-            pythonRunner.startPythonServer(port);
-            System.out.println("Python 서버가 시작되었습니다!");
-            return "makeup";// templates/makeup.html을 반환
-        } else {
-            System.out.println("Python 서버는 이미 실행 중입니다!");
-            return "makeup";// templates/makeup.html을 반환
-        }
+        return "makeup";// templates/makeup.html을 반환
     }
 
     // // 아직안씀
@@ -49,6 +38,21 @@ public class mainController {
     // public String checkServer() {
     // return pythonServerRunning ? "서버가 실행 중입니다." : "서버가 실행되고 있지 않습니다.";
     // }
+
+    @PostMapping("/practice")
+    public String practiceServer() {
+        int port = 8080; // 포트설정
+
+        // Fast API가 실행중이 아닌경우 서버 실행
+        if (!pythonServerRunning) {
+            setPythonServerRunning(true);
+            pythonRunner.startPythonServer(port);
+            System.out.println("Python 서버가 시작되었습니다!");
+        } else {
+            System.out.println("Python 서버는 이미 실행 중입니다!");
+        }
+        return "makeup";
+    }
 
     @PostMapping("/shutdown") // 서버 종료를 위한 경로
     public String shutdownServer() {

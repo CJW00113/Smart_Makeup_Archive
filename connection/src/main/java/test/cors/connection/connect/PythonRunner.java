@@ -1,8 +1,8 @@
 package test.cors.connection.connect;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+// import java.io.InputStreamReader;
+// import java.io.BufferedReader;
 
 import org.springframework.stereotype.Component;
 
@@ -20,23 +20,25 @@ public class PythonRunner {
                 System.out.println("Existing FastAPI server has been terminated.");
             }
 
-            //
-            ProcessBuilder builder = new ProcessBuilder("python", "src\\main\\java\\test\\cors\\connection\\connect\\testFastAPI.py",
+            ProcessBuilder builder = new ProcessBuilder("python",
+                    "src\\main\\java\\test\\cors\\connection\\connect\\testFastAPI.py",
                     String.valueOf(port));
             builder.redirectErrorStream(true);
             process = builder.start();
 
-            // 프로세스 출력 확인
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+            // // // 프로세스 출력 확인 부분이 필요할까?? 몰루??
+            // // 프로세스 출력 확인
+            // BufferedReader reader = new BufferedReader(new
+            // InputStreamReader(process.getInputStream()));
+            // String line;
+            // while ((line = reader.readLine()) != null) {
+            // System.out.println(line);
 
-                // 특정 로그 메시지를 확인할 수 있습니다.
-                if (line.contains("Starting FastAPI server")) { // FastAPI 로그 메시지에 맞게 수정
-                    System.out.println("FastAPI server is running successfully!");
-                }
-            }
+            // // 특정 로그 메시지를 확인할 수 있습니다.
+            // if (line.contains("Starting FastAPI server")) { // FastAPI 로그 메시지에 맞게 수정
+            // System.out.println("FastAPI server is running successfully!");
+            // }
+            // }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -46,6 +48,7 @@ public class PythonRunner {
     // try {
     // ProcessBuilder builder = new ProcessBuilder("python",
     // "src\\main\\java\\test\\cors\\connection\\connect\\testFastAPI.py");
+    // // // 이거 아마 uvicorn가 아니라 cmd였으면 됬으듯함
     // ssBuilder builder = new ProcessBuilder("uvicorn",
     // // rs.connection.connect.testFastAPI:app",
     // // , "127.0.0.1",
