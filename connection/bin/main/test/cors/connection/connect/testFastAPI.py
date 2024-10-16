@@ -251,4 +251,5 @@ if __name__ == "__main__":
 
 ## 종료방법 :
 ### tasklist | findstr python
-### taskkill /F /PID 포트번호
+### netstat -ano | findstr :"포트번호"
+### taskkill /F /PID "PID번호"

@@ -5,19 +5,19 @@ import java.io.InputStreamReader;
 
 public class PythonProcessManager {
 
-    // public static void main(String[] args) {
-    // try {
-    // String pid = getRunningPythonProcessPid();
-    // if (pid != null) {
-    // terminateProcess(pid);
-    // System.out.println("PID: " + pid + "종료 완료");
-    // } else {
-    // System.out.println("No Python process found.");
-    // }
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
+    public void deletePID() {
+        try {
+            String pid = getRunningPythonProcessPid();
+            if (pid != null) {
+                terminateProcess(pid);
+                System.out.println("PID: " + pid + "종료 완료");
+            } else {
+                System.out.println("No Python process found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // 실행 중인 Python 프로세스의 PID를 반환하는 함수
     private static String getRunningPythonProcessPid() {
