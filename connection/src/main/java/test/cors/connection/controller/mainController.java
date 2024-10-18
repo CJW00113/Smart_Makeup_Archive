@@ -57,6 +57,7 @@ public class mainController {
     @PostMapping("/shutdown") // 서버 종료를 위한 경로
     public String shutdownServer() {
         if (pythonServerRunning) {
+            System.out.println("Python 서버가 종료하러 드가자!");
             setPythonServerRunning(false);
             System.out.println("Python 서버가 종료되었습니다!");
             dataSendService.sendPostSignal("/shutdown");

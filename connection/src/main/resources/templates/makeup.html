@@ -120,6 +120,9 @@
 
         //////////////////// 비디오 연결 함수 //////////////////////
         function cunnectWebsocket() {
+            const videoElement = document.getElementById('video');
+            const websocket = new WebSocket('ws://127.0.0.1:8080/video-feed');
+
             websocket.onmessage = function(event) {
                 const blob = new Blob([event.data], { type: 'image/jpeg' });
                 const url = URL.createObjectURL(blob);
@@ -137,6 +140,7 @@
 
         // 캠 연결 버튼 클릭 시 스트림 URL 설정
         connectButton.addEventListener('click', () => {
+            cunnectWebsocket();
             video.style.backgroundImage = 'url(http://localhost:8080/video_feed)'; // 캠 스트림 URL 설정
             video.classList.remove('hidden'); // 박스 보이기
             connectButton.classList.add('hidden'); // 연결 버튼 숨김
@@ -146,7 +150,7 @@
 
         // 캠 해제 버튼 클릭 시
         disconnectButton.addEventListener('click', () => {
-            video.style.backgroundImage = ''; // 스트림 해제
+            // video.style.backgroundImage = ''; // 스트림 해제
             video.classList.add('hidden'); // 박스 숨기기
             connectButton.classList.remove('hidden'); // 연결 버튼 표시
             disconnectButton.classList.add('hidden'); // 해제 버튼 숨김
@@ -167,9 +171,9 @@
             })
             .then(response => {
                 if (response.ok) {
-                    alert('/practice: 보냄이 완료되었습니다.');
                     practiceButton.style.display = 'none'; // 버튼 숨기기
                     DestroyButton.style.display = 'block'; // 버튼 보이기
+                    alert('/practice: 보냄이 완료되었습니다.');
                 } else {
                     alert('/practice: 보내는 데 오류가 발생했습니다.');
                 }
@@ -188,9 +192,9 @@
             })
             .then(response => {
                 if (response.ok) {
-                    alert('/shutdown: 보냄이 완료되었습니다.');
                     DestroyButton.style.display = 'none'; // 버튼 숨기기
                     practiceButton.style.display = 'block'; // 버튼 보이기
+                    alert('/shutdown: 보냄이 완료되었습니다.');
                 } else {
                     alert('/shutdown: 보내는 데 오류가 발생했습니다.');
                 }

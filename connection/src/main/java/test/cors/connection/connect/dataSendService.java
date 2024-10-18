@@ -4,7 +4,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.Getter;
@@ -15,25 +17,49 @@ public class dataSendService {
 
     private static String fastApiPort = "http://127.0.0.1:8080";
 
-    // POST 신호만 보낼 때
     public static void sendPostSignal(String postURL) {
         String fastApiURL = fastApiPort + postURL; // 전송할 URL 정의
-
         RestTemplate restTemplate = new RestTemplate(); // RESTful에 사용할 객체 정의
-
         // 통신을 위해, JSON형태로 변환
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         // 빈 요청 객체 생성 (본문 없이 보내기)
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-
         // 요청 로그 출력
         System.out.println("전송 경로: " + postURL + ", Sending POST request");
 
-        // POST 요청 전송
-        restTemplate.exchange(fastApiURL, HttpMethod.POST, requestEntity, Void.class);
+        try {
+            // POST 요청 전송
+            ResponseEntity<Void> response = restTemplate.exchange(fastApiURL, HttpMethod.POST, requestEntity,
+                    Void.class);
+            // 응답 상태 로그 출력
+            System.out.println("응답 상태: " + response.getStatusCode());
+        } catch (RestClientException e) {
+            // 예외 로그 출력
+            System.err.println("POST 요청 실패: " + e.getMessage());
+        }
     }
+
+    // // POST 신호만 보낼 때
+    // public static void sendPostSignal(String postURL) {
+    // String fastApiURL = fastApiPort + postURL; // 전송할 URL 정의
+
+    // RestTemplate restTemplate = new RestTemplate(); // RESTful에 사용할 객체 정의
+
+    // // 통신을 위해, JSON형태로 변환
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.setContentType(MediaType.APPLICATION_JSON);
+
+    // // 빈 요청 객체 생성 (본문 없이 보내기)
+    // HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+    // // 요청 로그 출력
+    // System.out.println("전송 경로: " + postURL + ", Sending POST request");
+
+    // // POST 요청 전송
+    // restTemplate.exchange(fastApiURL, HttpMethod.POST, requestEntity,
+    // Void.class);
+    // }
 
     // str 보내기
     public static void sendStringVariable(String requestValue, String PostURL) {
