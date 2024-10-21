@@ -7,9 +7,11 @@ def get_color(event, x, y, flags, param):
         b, g, r = image[y, x]
         # RGB 값 출력
         print(f'RGB: ({r}, {g}, {b})')
+        # BGR 값 출력
+        print(f'BGR: ({b}, {g}, {r})')
         # HEX 값 변환
         hex_color = "#{:02x}{:02x}{:02x}".format(r, g, b)
-        print(f'HEX: {hex_color}')
+        print(f'HEX: {hex_color} \n')
 
 # 이미지 로드
 image = cv2.imread('color_img.PNG')  # 이미지 파일 경로 변경
