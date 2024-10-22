@@ -12,9 +12,9 @@ def get_color(event, x, y, flags, param):
         # HEX 값 변환
         hex_color = "#{:02x}{:02x}{:02x}".format(r, g, b)
         print(f'HEX: {hex_color} \n')
-
+        
 # 이미지 로드
-image = cv2.imread('color_img.PNG')  # 이미지 파일 경로 변경
+image = cv2.imread('Cosmetics\lip_color_img.PNG')  # 이미지 파일 경로 변경
 
 # 윈도우 생성
 cv2.namedWindow('Image')
