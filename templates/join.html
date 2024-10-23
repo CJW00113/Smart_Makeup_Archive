@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 가입</title>
+    <link rel="stylesheet" th:href="@{/CSS/menubar.css}">
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}">
+
+    <!-- 부트스트랩 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: none;
+            max-width: 400px; /* 카드 최대 너비 설정 */
+            margin: auto; /* 중앙 정렬 */
+            padding: 20px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .btn-link {
+            text-decoration: none; /* 링크의 밑줄 제거 */
+            color: #007bff; /* 링크 색상 설정 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 메뉴바 -->
+    <div th:replace="~{menubar.html::global-menubar}"></div>
+
+    <!-- 회원가입 폼 -->
+    <div class="container mt-5">
+        <div class="card">
+            <h2 class="text-center" style="color: white;">회원 가입</h2>
+            <form action="/join_in" method="POST">
+                <div class="mb-3">
+                    <label for="member_id" class="form-label" style="color: white;">아이디</label>
+                    <input type="text" name="member_id" id="member_id" class="form-control" required>
+                    <button type="button" id="check_overlap" class="btn btn-link">중복확인</button>
+                </div>
+                <div class="mb-3">
+                    <label for="member_password" class="form-label" style="color: white;">비밀번호</label>
+                    <input type="password" name="member_password" id="member_password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="color: white;">이메일</label>
+                    <input type="email" name="email" id="email" class="form-control" required placeholder="example@domain.com">
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label" style="color: white;">전화번호</label>
+                    <input type="tel" name="phone" id="phone" class="form-control" required placeholder="010-1111-1111">
+                </div>
+                <button type="submit" class="btn btn-custom">회원가입</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer_left">
+        </div>
+
+        <div class="footer_middle_left">
+            <a href="/index" style="text-decoration: none;">
+                <h1 class="overlay-text-small_one">Smart</h1>
+                <h1 class="overlay-text-small_two">Makeup</h1>
+            </a>
+        </div>
+
+        <div class="footer_middle">
+            <p style="line-height: 1.0;">© 2024 모든 권리 보유</p>
+            <p style="line-height: 0.5;">스마트 메이크업</p>
+            <p style="line-height: 0.5;"> 제작: 최준원, 한기윤, 현호성</p>
+            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 Smart_IoT_Vanity를 Web으로 구현한 사이트입니다.</p>
+        </div>
+
+        <div class="footer_mark">
+            <a href="https://github.com/hosunghyun/Smart_Makeup_Web">
+                <img th:src="@{/sysimg/git_icon.png}" class="gitIcon" >
+            </a>
+        </div>
+
+        <div class="footer_right">
+        </div>
+    </footer>
+    
+    <script th:src="@{/JS/join/join.js}"></script>
+</body>
+</html>

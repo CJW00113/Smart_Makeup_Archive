@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 글 작성하기</title>
+    <link rel="stylesheet" th:href="@{/CSS/menubar.css}">
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}">
+        
+    <!-- 부트스트랩 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <!-- 메뉴바 -->
+    <div th:replace="~{menubar.html::global-menubar}"></div>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">새 게시글 작성</h1>
+        
+        <!-- 게시판에 새 글을 작성하는 부분 -->
+        <form th:action="@{/write}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력하세요" required>
+                <div class="invalid-feedback">제목을 입력해주세요.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="imageInput" class="form-label">이미지</label>
+                <input type="file" class="form-control" id="imageInput" name="imageInput" accept="image/*" multiple>
+                <small class="form-text text-muted">Ctrl 또는 Shift 키를 사용하여 여러 이미지를 선택할 수 있습니다.</small>
+            </div>
+            
+            <div class="mb-3">
+                <label for="content" class="form-label">본문</label>
+                <textarea class="form-control" name="content" id="content" rows="5" placeholder="본문 내용을 입력하세요" required></textarea>
+                <div class="invalid-feedback">본문을 입력해주세요.</div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">저장</button>
+        </form>
+    </div>
+
+    <footer>
+        <div class="footer_left">
+        </div>
+
+        <div class="footer_middle_left">
+            <a href="/index" style="text-decoration: none;">
+                <h1 class="overlay-text-small_one">Smart</h1>
+                <h1 class="overlay-text-small_two">Makeup</h1>
+            </a>
+        </div>
+
+        <div class="footer_middle">
+            <p style="line-height: 1.0;">© 2024 모든 권리 보유</p>
+            <p style="line-height: 0.5;">스마트 메이크업</p>
+            <p style="line-height: 0.5;"> 제작: 최준원, 한기윤, 현호성</p>
+            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 Smart_IoT_Vanity를 Web으로 구현한 사이트입니다.</p>
+        </div>
+
+        <div class="footer_mark">
+            <a href="https://github.com/hosunghyun/Smart_Makeup_Web">
+                <img th:src="@{/sysimg/git_icon.png}" class="gitIcon" >
+            </a>
+        </div>
+
+        <div class="footer_right">
+        </div>
+    </footer>
+</body>
+</html>

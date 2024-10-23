@@ -1,0 +1,14 @@
+<div class="global-menubar" th:fragment="global-menubar">
+    <a class="nav-href" href="/">홈</a>
+    <a class="nav-href" href="/makeup">화장하기</a>
+    <a class="nav-href" href="/recommendation">추천 제품</a>
+    <a class="nav-href" href="/board">게시판</a>
+    <a class="nav-href" href="/sign" sec:authorize="isAnonymous()">로그인</a>
+    <div class="dropdown">
+        <button class="dropbtn" sec:authorize="isAuthenticated()">회원정보</button>
+        <div class="dropdown-content">
+            <a class="nav-href" href="/checkuser">프로필</a>
+            <a class="nav-href" href="/signout">로그아웃</a>
+        </div>
+    </div>
+</div>

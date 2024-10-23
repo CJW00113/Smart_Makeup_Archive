@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${board.getTitle()}"> 페이지</title>
+    <link rel="stylesheet" th:href="@{/CSS/menubar.css}">
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}">
+    
+    <!-- 부트스트랩 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <!-- 메뉴바 -->
+    <div th:replace="~{menubar.html::global-menubar}"></div>
+
+    <div class="container mt-5">
+        <!-- 게시글 제목 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 th:text="${board.getTitle()}">제목</h3>
+            </div>
+            <div class="card-body">
+                <!-- 게시글 이미지들 -->
+                <div class="row mb-3">
+                    <div th:each="image : ${board.getImages()}" class="col-md-4">
+                        <img th:src="${image.image_link}" class="img-fluid rounded" alt="이미지">
+                    </div>
+                </div>
+                <!-- 게시글 내용 -->
+                <p th:text="${board.getContent_text()}">내용</p>
+            </div>
+        </div>
+
+        <!-- 수정과 삭제 버튼 -->
+        <div class="d-flex justify-content-end mb-4">
+            <button id="editbtn" type="button" class="btn btn-primary me-2">수정</button>
+            <button id="deletebtn" type="button" class="btn btn-danger">삭제</button>
+        </div>
+
+        <!-- 댓글 작성 폼 -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{|/write/content/${board.getId()}|}" method="POST">
+                    <div class="mb-3">
+                        <label for="contents" class="form-label">댓글</label>
+                        <input type="text" name="contents" id="contents" class="form-control" placeholder="댓글을 입력하세요" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">댓글 저장</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 댓글 리스트 -->
+        <div class="card">
+            <div class="card-body">
+                <div th:each="content : ${contents}" class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong th:text="${content.getMember().getMember_id()}"></strong>
+                            <p th:text="${content.getComment_content()}"></p>
+                        </div>
+                        <button type="button" th:id="'CDbtn_' + ${content.getId()}" class="btn btn-sm btn-outline-danger">댓글 삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- 수정과 삭제 버튼에 대한 자바스크립트 -->
+
+    <!-- 로그인된 사용자일 경우 게시글 수정 삭제 버튼 클릭 가능 -->
+    <div sec:authorize="isAuthenticated()">
+        <script th:inline="javascript">
+            (()=>{
+                /*<![CDATA[*/ 
+                const $editbtn = document.getElementById("editbtn");        // 수정 버튼
+                const $deletebtn = document.getElementById("deletebtn");    // 삭제 버튼
+
+                // 이미지 ID를 가져오는 방법
+                const imageId = /*[[${board.getId()}]]*/ ''; // 첫 번째 이미지의 ID를 가져옵니다.
+                const username = /*[[${#authentication.principal.username}]]*/ '';    // 현재 로그인한 사용자명
+
+                // 수정하는 기능
+                $editbtn.addEventListener('click', () => {
+                    fetch(`/checkuser/board_id=${imageId}`)     // 변경하기 전에 현재 로그인 중인 사용자와 게시판 작성자가 맞는지 확인하기
+                        .then((message) => { return message.text(); })
+                        .then((message) => {
+                            if (message === "NO-WRITTER") { // 게시판 작성자와 현재 로그인 중인 사용자가 같지 않다.
+                                alert(`${username}님은 해당 게시글을 작성한 작성자가 아닙니다.`); // 중복일 경우 알림
+                            }
+                            else {  // 게시판 작성자와 현재 로그인 중인 사용자가 같다.
+                                window.location.href=`/edit/board_id=${imageId}`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error); // 에러 처리
+                        });
+                });
+
+                // 삭제하는 기능
+                $deletebtn.addEventListener('click', ()=>{
+                    const del = confirm("정말로 삭제하시겠습니까?");
+                    if(del) {
+                        fetch(`/delete/board=${imageId}`, {
+                            method : 'POST',
+                            headers : { "Content-Type" : "application/json" },
+                            body : JSON.stringify({"board_id" : imageId})
+                        })
+                        .then((message) => { return message.text(); })
+                        .then((message) => {
+                            if (message === "fails") { // 게시판 작성자와 현재 로그인 중인 사용자가 같지 않다.
+                                alert(`${username}님은 해당 댓글을 작성한 작성자가 아닙니다.`); // 중복일 경우 알림
+                            }
+                            else {  // 게시판 글 삭제 성공
+                                window.location.href=`/board`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error); // 에러 처리
+                        });
+                    }
+                    else {
+                        window.location.href= `/board`;
+                    }
+                });
+                /*]]>*/
+            })();
+        </script>
+    </div>
+
+    <footer>
+        <div class="footer_left">
+        </div>
+
+        <div class="footer_middle_left">
+            <a href="/index" style="text-decoration: none;">
+                <h1 class="overlay-text-small_one">Smart</h1>
+                <h1 class="overlay-text-small_two">Makeup</h1>
+            </a>
+        </div>
+
+        <div class="footer_middle">
+            <p style="line-height: 1.0;">© 2024 모든 권리 보유</p>
+            <p style="line-height: 0.5;">스마트 메이크업</p>
+            <p style="line-height: 0.5;"> 제작: 최준원, 한기윤, 현호성</p>
+            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 Smart_IoT_Vanity를 Web으로 구현한 사이트입니다.</p>
+        </div>
+
+        <div class="footer_mark">
+            <a href="https://github.com/hosunghyun/Smart_Makeup_Web">
+                <img th:src="@{/sysimg/git_icon.png}" class="gitIcon" >
+            </a>
+        </div>
+
+        <div class="footer_right">
+        </div>
+    </footer>
+
+    <!-- 로그인되지 않은 사용자가 게시판 글 수정 삭제 버튼 클릭 -->
+    <div sec:authorize="isAnonymous()">
+        <script th:src="@{/JS/boarddetail/unsignedboarddetail.js}" defer></script>
+    </div>
+
+    <!-- 로그인되지 않은 사용자일 경우 댓글 삭제 버튼 클릭 -->
+    <div sec:authorize="isAnonymous()">
+        <script th:src="@{/JS/boarddetail/unsignedUDbtn.js}"></script>
+    </div>
+
+    <!-- 로그인된 사용자가 댓글 삭제 버튼 클릭 -->
+    <div sec:authorize="isAuthenticated()">
+        <script th:inline="javascript">
+            (()=>{
+                /*<![CDATA[*/ 
+                // 모든 삭제 버튼 가져오기
+                const deleteButtons = document.querySelectorAll('[id^="CDbtn_"]');
+
+                const imageId = /*[[${board.getId()}]]*/ ''; // 첫 번째 이미지의 ID를 가져옵니다.
+                const username = /*[[${#authentication.principal.username}]]*/ '';    // 현재 로그인한 사용자명
+                
+                // 댓글 중 하나의 삭제 버튼 클릭했을 경우
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', ()=>{
+                        // 버튼 ID에서 숫자 추출
+                        const buttonId = button.id; // 예: CDbtn_1
+                        const contentId = buttonId.split('_')[1]; // 숫자만 추출
+
+                        fetch(`/deletecomment`, {
+                            method : 'POST',
+                            headers : { "Content-Type" : "application/json" },
+                            body : JSON.stringify({"board_id" : imageId, "comment_id" : contentId})
+                        })     // 변경하기 전에 현재 로그인 중인 사용자와 게시판 작성자가 맞는지 확인하기
+                        .then((message) => { return message.text(); })
+                        .then((message) => {
+                            if (message === "fails") { // 게시판 작성자와 현재 로그인 중인 사용자가 같지 않다.
+                                alert(`${username}님은 해당 댓글을 작성한 작성자가 아닙니다.`); // 중복일 경우 알림
+                            }
+                            else {  // 댓글 삭제 성공
+                                window.location.href=`/boarddetail/id=${imageId}`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error); // 에러 처리
+                        });
+                    });
+                });
+                /*]]>*/
+            })();
+        </script>
+    </div>
+</body>
+</html>

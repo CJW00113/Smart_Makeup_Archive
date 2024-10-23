@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제품 추천하기</title>
+    
+    <!-- 부트스트랩 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/CSS/slider.css}">
+    <link rel="stylesheet" th:href="@{/CSS/menubar.css}">
+    <link rel="stylesheet" th:href="@{/CSS/footer.css}">
+</head>
+<body>
+    <!-- 메뉴바 -->
+    <div th:replace="~{menubar.html::global-menubar}"></div>
+
+    <!-- 카드 컨테이너 -->
+    <div class="container mt-5 d-flex justify-content-center">
+        <div class="d-flex align-items-center">
+            <!-- 이전 버튼 -->
+            <button type="button" id="prebtn" class="nav-btn me-3">이전</button> <!-- 오른쪽 여백 추가 -->
+
+            <!-- 카드들 -->
+            <div class="cards-container">
+                <!-- 1번 카드 -->
+                <div class="card">
+                    <img id="img1" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title">화장품명</h5>
+                        <p class="card-text">화장품 가격</p>
+                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                    </div>
+                </div>
+
+                <!-- 2번 카드 -->
+                <div class="card">
+                    <img id="img2" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title">화장품명</h5>
+                        <p class="card-text">화장품 가격</p>
+                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                    </div>
+                </div>
+
+                <!-- 3번 카드 -->
+                <div class="card">
+                    <img id="img3" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title">화장품명</h5>
+                        <p class="card-text">화장품 가격</p>
+                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                    </div>
+                </div>
+
+                <!-- 4번 카드 -->
+                <div class="card">
+                    <img id="img4" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title">화장품명</h5>
+                        <p class="card-text">화장품 가격</p>
+                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                    </div>
+                </div>
+
+                <!-- 5번 카드 -->
+                <div class="card">
+                    <img id="img5" class="card-img-top" alt="image">
+                    <div class="card-body">
+                        <h5 class="card-title">화장품명</h5>
+                        <p class="card-text">화장품 가격</p>
+                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 다음 버튼 -->
+            <button type="button" id="nextbtn" class="nav-btn ms-3">다음</button> <!-- 왼쪽 여백 추가 -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer_left">
+        </div>
+
+        <div class="footer_middle_left">
+            <a href="/index" style="text-decoration: none;">
+                <h1 class="overlay-text-small_one">Smart</h1>
+                <h1 class="overlay-text-small_two">Makeup</h1>
+            </a>
+        </div>
+
+        <div class="footer_middle">
+            <p style="line-height: 1.0;">© 2024 모든 권리 보유</p>
+            <p style="line-height: 0.5;">스마트 메이크업</p>
+            <p style="line-height: 0.5;"> 제작: 최준원, 한기윤, 현호성</p>
+            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 Smart_IoT_Vanity를 Web으로 구현한 사이트입니다.</p>
+        </div>
+
+        <div class="footer_mark">
+            <a href="https://github.com/hosunghyun/Smart_Makeup_Web">
+                <img th:src="@{/sysimg/git_icon.png}" class="gitIcon" >
+            </a>
+        </div>
+
+        <div class="footer_right">
+        </div>
+    </footer>
+
+    <script th:inline="javascript">
+        (() => {
+            /*<![CDATA[*/ 
+            const img1 = document.getElementById("img1");
+            const img2 = document.getElementById("img2");
+            const img3 = document.getElementById("img3");
+            const img4 = document.getElementById("img4");
+            const img5 = document.getElementById("img5");
+            const prebtn = document.getElementById("prebtn");
+            const nextbtn = document.getElementById("nextbtn");
+            const images = /*[[${images}]]*/ [];
+
+            let index = 0;
+
+            function updateImages() {
+                img1.src = images[(index + 0) % images.length];
+                img2.src = images[(index + 1) % images.length];
+                img3.src = images[(index + 2) % images.length];
+                img4.src = images[(index + 3) % images.length];
+                img5.src = images[(index + 4) % images.length];
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                updateImages(); // 페이지 로드 시 이미지 설정
+            });
+
+            prebtn.addEventListener('click', () => {
+                index = (index - 1 + images.length) % images.length; // 인덱스를 감소하고, 순환
+                updateImages(); // 이미지 업데이트
+            });
+
+            nextbtn.addEventListener('click', () => {
+                index = (index + 1) % images.length; // 인덱스를 증가하고, 순환
+                updateImages(); // 이미지 업데이트
+            });
+            /*]]>*/
+        })();
+    </script>
+</body>
+</html>
