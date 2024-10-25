@@ -55,7 +55,7 @@ def load_params():
                 for line in lines:
                     key, value = line.strip().split("=")
                     if value.startswith("(") and value.endswith(")"):  # 튜플 형식으로 저장된 경우
-                        params[key] = tuple(map(int, value.strip("()").split(",")))
+                        params[key] = tuple(map(int, value.strip("()").split(",")))     # 튜플 내부는 INT
                     else:
                         params[key] = str(value)    # 이외의 형태는 str로 저장
     except FileNotFoundError:
@@ -164,6 +164,11 @@ async def video_feed(websocket: WebSocket):
     # 웹캠 비디오 캡처 초기화
     cap = cv2.VideoCapture(0)
 
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
+    print(f"카메라 해상도: {width} x {height}")
+
     try:
         while True:
             # 프레임 읽기
@@ -173,11 +178,14 @@ async def video_feed(websocket: WebSocket):
             load_params()  # 주기적으로 매개변수 읽기
 
             # # 매개변수를 텍스트로 출력
-            # print(f"opacity: {params['opacity']}, hex: {params['hex']}, bgr_color: {params['bgr_color']}")
-            # print(f"opacity: {type(params['opacity'])}, hex: {type(params['hex'])}, bgr_color: {type(params['bgr_color'])}")
+            # opacity:str / hex:str / bgr_color:Tuple(int,int,int)
+            text = f"opacity: {params['opacity']}"
 
-            text = f"opacity: {params['opacity']}, hex: {params['hex']}, bgr_color: {params['bgr_color']}"
-            putText_frames(frame, text, params['bgr_color'], 30)
+            if text == f"opacity: {100}":
+                putText_frames(frame, "MAX", (0,255,255), 30)
+            else:
+                putText_frames(frame, text, params['bgr_color'], 30)
+
 
             
             # 프레임을 JPEG 형식으로 인코딩
@@ -236,13 +244,9 @@ if __name__ == "__main__":
     set_TxtValue("hex","#000000")
     set_TxtValue("bgr_color",hex_to_bgr("#000000"))
 
-    # # 테스트용) 매개변수를 텍스트로 출력
-    # print(f"opacity: {params['opacity']}, hex: {params['hex']}, bgr_color: {params['bgr_color']}")
-    # print(f"opacity: {type(params['opacity'])}, hex: {type(params['hex'])}, bgr_color: {type(params['bgr_color'])}")
-    # ## opacity: <class 'str'>, hex: <class 'str'>, bgr_color: <class 'tuple'> 으로 저장됨
-
     ## 뒤에 있어야함. 그래야  txt 초기화 코드가 실행됨, 근데뭔가뭔가하자가있는듯함뭔가뭔가임기분탓같은데뭔가뭔가뭔가임
     uvicorn.run(app, port=8080)
+
     ## 테스트용)
     # uvicorn.run(app, host="127.0.0.1", port=8080, reload=False) # 디버깅아님
     # uvicorn.run(app, host="127.0.0.1", port=8080, reload=True) # 디버깅모드임
