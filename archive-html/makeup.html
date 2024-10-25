@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makeup Page</title>
+    <style>
+        #colorBox {
+            border: 1px solid #000;
+            background-color: #ccc; /* 기본 색상 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-image: linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1));
+            background-size: 10px 10px; /* 슬래시 크기 조절 */
+        }
+
+        .webcamStream {
+            width: 640px;  /* 원하는 너비 */
+            height: 480px; /* 원하는 높이 */
+            background-color: black; /* 기본 배경색 */
+            position: relative; /* 자식 요소의 위치를 위해 설정 */
+        }
+        .webcamStream div {
+            width: 100%;
+            height: 100%;
+            background-size: cover; /* 배경 이미지 크기 조정 */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .hidden {
+            display: none; /* 숨기기 위한 클래스 */
+        }
+        .color-button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+        .btn01 { background-color: red; }
+        .btn02 { background-color: green; }
+        .btn03 { background-color: blue; }
+        .btn04 { background-color: yellow; }
+        .btn05 { background-color: orange; }
+        .btn06 { background-color: purple; }
+        .btn07 { background-color: pink; }
+        .btn08 { background-color: cyan; }
+        .btn09 { background-color: brown; }
+        .btn10 { background-color: gray; }
+        .btn11 { background-color: lightcoral; }
+        .btn12 { background-color: lightgreen; }
+        .btn13 { background-color: lightblue; }
+        .btn14 { background-color: lavender; }
+        .btn15 { background-color: gold; }
+        .btn16 { background-color: salmon; }
+        .btn17 { background-color: teal; }
+        .btn18 { background-color: navy; }
+        .btn19 { background-color: maroon; }
+        .btn20 { background-color: olive; }
+        .btn21 { background-color: coral; }
+        .btn22 { background-color: plum; }
+        .btn23 { background-color: khaki; }
+        .btn24 { background-color: chocolate; }
+        .btn25 { background-color: sienna; }
+        .btn26 { background-color: slateblue; }
+        .btn27 { background-color: mediumseagreen; }
+        .btn28 { background-color: lightsalmon; }
+        .btn29 { background-color: lightgray; }
+        .btn30 { background-color: darkorange; }
+        .btn31 { background-color: springgreen; }
+        .btn32 { background-color: violet; }
+
+        .color-button-container {
+            display: flex; /* 버튼들을 가로로 배치 */
+            margin-left: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex;">
+
+        <!--왼쪽 칸-->
+        <div style="width: 60%; background-color: #ff0000;">
+            <!--캠 연결 버튼-->
+            <div style="width: 655px; height: 50px; float: right; background-color: #00ff00;">
+                <p style="display: inline-block; margin-top: 10px;">
+                    <button id="connectButton">캠 연결</button>
+                    <button id="disconnectButton" class="hidden">캠 해제</button>
+                </p>
+                <p style="display: inline-block; margin-bottom: 10px;">
+                    <button id="practiceButton" onclick="sendConnectPython(); cunnectWebsocket();">서버 실행</button>
+                    <button id="DestroyButton" onclick="sendDestroyPython();" class="hidden">서버 종료</button>
+                </p>
+            </div>
+
+            <!--캠이 출력되는 이미지-->
+            <div style="float: right; margin: 10px 15px 10px 10px;"> <!--위, 오른쪽, 아래, 왼쪽 여백 순서-->
+                <div class="webcamStream">
+                    <img id="video" class="hidden" src="" alt="Video Feed"/>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!--오른쪽 칸-->
+        <div style="width: 40%; height: 40%; background-color: #1100ff; display: flex; align-items: flex-start;">
+            <!--캠 화면을 제어하는 구문, 캠이 연결된 경우에 show, 아니면 hidden-->
+
+            
+            <!-- 직사각형 박스 -->
+            <div style="width: 300px; height: 480px; background-color: #ffffff; border: 2px solid #000; margin-top: 60px; margin-left: 10px;">
+                <!-- 여기에 추가 내용을 넣을 수 있습니다 -->
+                <div style="height: 70%; background-color: #55558d;">
+                    <!-- 색상 버튼 첫 번째 줄 -->
+                    <div class="color-button-container" style="margin-top: 50px;">
+                        <button class="color-button btn01"></button>
+                        <button class="color-button btn02"></button>
+                        <button class="color-button btn03"></button>
+                        <button class="color-button btn04"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn05"></button>
+                        <button class="color-button btn06"></button>
+                        <button class="color-button btn07"></button>
+                        <button class="color-button btn08"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn09"></button>
+                        <button class="color-button btn10"></button>
+                        <button class="color-button btn11"></button>
+                        <button class="color-button btn12"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn13"></button>
+                        <button class="color-button btn14"></button>
+                        <button class="color-button btn15"></button>
+                        <button class="color-button btn16"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn17"></button>
+                        <button class="color-button btn18"></button>
+                        <button class="color-button btn19"></button>
+                        <button class="color-button btn20"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn21"></button>
+                        <button class="color-button btn22"></button>
+                        <button class="color-button btn23"></button>
+                        <button class="color-button btn24"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn25"></button>
+                        <button class="color-button btn26"></button>
+                        <button class="color-button btn27"></button>
+                        <button class="color-button btn28"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button btn29"></button>
+                        <button class="color-button btn30"></button>
+                        <button class="color-button btn31"></button>
+                        <button class="color-button btn32"></button>
+                        <div id="colorBox" class="color-button"></div>        <!-- 바뀌는 박스 -->
+                    </div>
+
+                </div>
+                <!--슬라이더, 닫기버튼-->
+                <div style="height: 20%; background-color: #5b9b36;">
+                    <div style="margin-left: 20px;">
+                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" />
+                    </div>
+
+                    <div style="margin-left: 20px;">
+                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" style="width: 80%; height: 15px;" />
+                        
+
+                        <!-- <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" style="width: 80%; height: 15px; -webkit-appearance: none; appearance: none;" />
+
+                        <style>
+                        input[type=range] {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            width: 100%;
+                        }
+
+                        /* 슬라이더의 트랙 스타일 */
+                        input[type=range]::-webkit-slider-runnable-track {
+                            height: 8px; /* 트랙의 높이 */
+                            background: #ddd; /* 트랙 색상 */
+                        }
+
+                        input[type=range]::-moz-range-track {
+                            background: #ddd; /* 트랙 색상 */
+                        }
+
+                        /* 핸들 크기 및 스타일 */
+                        input[type=range]::-webkit-slider-thumb {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            width: 30px; /* 핸들의 너비 */
+                            height: 30px; /* 핸들의 높이 */
+                            background: #4CAF50; /* 핸들의 색상 */
+                            border-radius: 50%; /* 핸들을 둥글게 */
+                            cursor: pointer;
+                            margin-top: -11px; /* 핸들이 트랙 중앙에 오도록 조정 */
+                        }
+
+                        input[type=range]::-moz-range-thumb {
+                            width: 30px; /* 핸들의 너비 */
+                            height: 30px; /* 핸들의 높이 */
+                            background: #4CAF50; /* 핸들의 색상 */
+                            border-radius: 50%; /* 핸들을 둥글게 */
+                            cursor: pointer;
+                        }
+                        </style> -->
+
+
+
+
+
+
+
+
+                    
+                    
+                    
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <p>
+        <h1>Webcam Feed</h1>
+        <div class="webcamStream">
+            <img id="video" class="hidden" src="" alt="Video Feed"/>
+        </div>
+    </p>
+    
+    <button id="connectButton">캠 연결</button>
+    <button id="disconnectButton" class="hidden">캠 해제</button>
+
+
+    <p>
+        <button id="practiceButton" onclick="sendConnectPython(); cunnectWebsocket();">서버 실행</button>
+        <button id="DestroyButton" onclick="sendDestroyPython();" class="hidden" >서버 종료</button>
+    </p>
+
+    <p id="colorSelect" class="hidden"></p>
+    <h1>캠이 연결되면 보일 부분들</h1>
+
+    <p>
+        <h4>슬라이더 값 변경</h4>
+        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" />
+    </p>
+
+    <p>
+    <h4>버튼 값 전송</h4>
+        <div id="colorBox" class="color-button"></div>        <!-- 바뀌는 박스 -->
+        <button class="color-button" style="background-color: #ff0000;" onclick="changeColor('#ff0000'); sendButtonValue('#ff0000');"></button>
+        <button class="color-button" style="background-color: #0000ff;" onclick="changeColor('#0000ff'); sendButtonValue('#0000ff');"></button>
+        <button class="color-button" style="background-color: #00ff00;" onclick="changeColor('#00ff00'); sendButtonValue('#00ff00');"></button>
+    </p>
+
+
+    <script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////// 슬라이더 값 POST로 전송 ///////////////////
+        function sendSliderValue(value) {
+            fetch('/slider', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ opacity: value })
+            });
+        }
+        /////////////////// 버튼 값 POST로 전송 ///////////////////
+        function sendButtonValue(value) {
+            fetch('/btnColor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ hex: value })
+            });
+        }
+        ////////////////// 색 바꾸기 //////////////////
+        function changeColor(color) {
+            const colorBox = document.getElementById('colorBox');
+            colorBox.style.backgroundColor = color;
+            colorBox.style.backgroundImage = 'none'; // 배경 패턴 없애기
+            console.log(`선택된 색상: ${color}`); // 선택된 색상 HEX 코드 콘솔 로그 출력
+        }
+        //////////////////// 동작과 동시에 비디오 연결 //////////////////////
+        const videoElement = document.getElementById('video');
+        const websocket = new WebSocket('ws://127.0.0.1:8080/video-feed');
+
+        websocket.onmessage = function(event) {
+            const blob = new Blob([event.data], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            videoElement.src = url;
+        };
+
+        websocket.onclose = function(event) {
+            console.log('페이지 초기 : WebSocket closed:', event);
+        };
+
+        //////////////////// 비디오 연결 함수 //////////////////////
+        function cunnectWebsocket() {
+            const videoElement = document.getElementById('video');
+            const websocket = new WebSocket('ws://127.0.0.1:8080/video-feed');
+
+            websocket.onmessage = function(event) {
+                const blob = new Blob([event.data], { type: 'image/jpeg' });
+                const url = URL.createObjectURL(blob);
+                videoElement.src = url;
+            };
+        }
+        
+
+        ///////////////// 비디오 버튼 /////////////////
+        const video = document.getElementById('video');
+        const connectButton = document.getElementById('connectButton');
+        const disconnectButton = document.getElementById('disconnectButton');
+
+        let streamActive = false; // 스트림 상태 변수
+
+        // 캠 연결 버튼 클릭 시 스트림 URL 설정
+        connectButton.addEventListener('click', () => {
+            cunnectWebsocket();
+            video.style.backgroundImage = 'url(http://localhost:8080/video_feed)'; // 캠 스트림 URL 설정
+            video.classList.remove('hidden'); // 박스 보이기
+            connectButton.classList.add('hidden'); // 연결 버튼 숨김
+            disconnectButton.classList.remove('hidden'); // 해제 버튼 표시
+            streamActive = true; // 스트림 상태 업데이트
+        });
+
+        // 캠 해제 버튼 클릭 시
+        disconnectButton.addEventListener('click', () => {
+            // video.style.backgroundImage = ''; // 스트림 해제
+            video.classList.add('hidden'); // 박스 숨기기
+            connectButton.classList.remove('hidden'); // 연결 버튼 표시
+            disconnectButton.classList.add('hidden'); // 해제 버튼 숨김
+            streamActive = false; // 상태 업데이트
+            alert('캠이 해제되었습니다.'); // 경고 창 표시
+        });
+
+        ///////////// 프로세스 제어 //////////////
+        const practiceButton = document.getElementById('practiceButton');
+        const DestroyButton = document.getElementById('DestroyButton');
+        ///////////// 프로세스 연결 //////////////
+        function sendConnectPython() {
+            fetch('/practice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    practiceButton.style.display = 'none'; // 버튼 숨기기
+                    DestroyButton.style.display = 'block'; // 버튼 보이기
+                    alert('/practice: 보냄이 완료되었습니다.');
+                } else {
+                    alert('/practice: 보내는 데 오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                alert('/practice: 네트워크 오류가 발생했습니다: ' + error);
+            });
+        }
+        ///////////// 프로세스 종료 //////////////
+        function sendDestroyPython() {
+            fetch('/shutdown', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    DestroyButton.style.display = 'none'; // 버튼 숨기기
+                    practiceButton.style.display = 'block'; // 버튼 보이기
+                    alert('/shutdown: 보냄이 완료되었습니다.');
+                } else {
+                    alert('/shutdown: 보내는 데 오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                alert('/shutdown: 네트워크 오류가 발생했습니다: ' + error);
+            });
+        }
+    </script>
+</body>
+</html>
