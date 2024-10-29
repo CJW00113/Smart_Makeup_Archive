@@ -36,7 +36,9 @@ public class dataSendService {
             System.out.println("응답 상태: " + response.getStatusCode());
         } catch (RestClientException e) {
             // 예외 로그 출력
-            System.err.println("POST 요청 실패: " + e.getMessage());
+            System.err.println("POST 요청 예외 로그 출력: " + e.getMessage());
+            System.err.println(
+                    "I/O error on POST request for \"http://127.0.0.1:8080/shutdown\": Connection reset 인 경우: 문제 없습니다.");
         }
     }
 

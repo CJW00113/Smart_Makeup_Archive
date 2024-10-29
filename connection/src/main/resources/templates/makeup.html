@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Makeup Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        #colorBox {
+
+        .colorBox {
+            width: 30px;
+            height: 30px;
+
             border: 1px solid #000;
             background-color: #ccc; /* 기본 색상 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
             background-image: linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1));
             background-size: 10px 10px; /* 슬래시 크기 조절 */
+
+            margin: 10px 0px 0px 0px;
         }
 
         .webcamStream {
@@ -38,41 +41,11 @@
             height: 30px;
             border: none;
             cursor: pointer;
+            /* padding-top: 10px;
+            padding-right: 20px; */
             margin-top: 10px;
             margin-right: 20px;
         }
-        .btn01 { background-color: red; }
-        .btn02 { background-color: green; }
-        .btn03 { background-color: blue; }
-        .btn04 { background-color: yellow; }
-        .btn05 { background-color: orange; }
-        .btn06 { background-color: purple; }
-        .btn07 { background-color: pink; }
-        .btn08 { background-color: cyan; }
-        .btn09 { background-color: brown; }
-        .btn10 { background-color: gray; }
-        .btn11 { background-color: lightcoral; }
-        .btn12 { background-color: lightgreen; }
-        .btn13 { background-color: lightblue; }
-        .btn14 { background-color: lavender; }
-        .btn15 { background-color: gold; }
-        .btn16 { background-color: salmon; }
-        .btn17 { background-color: teal; }
-        .btn18 { background-color: navy; }
-        .btn19 { background-color: maroon; }
-        .btn20 { background-color: olive; }
-        .btn21 { background-color: coral; }
-        .btn22 { background-color: plum; }
-        .btn23 { background-color: khaki; }
-        .btn24 { background-color: chocolate; }
-        .btn25 { background-color: sienna; }
-        .btn26 { background-color: slateblue; }
-        .btn27 { background-color: mediumseagreen; }
-        .btn28 { background-color: lightsalmon; }
-        .btn29 { background-color: lightgray; }
-        .btn30 { background-color: darkorange; }
-        .btn31 { background-color: springgreen; }
-        .btn32 { background-color: violet; }
 
         .color-button-container {
             display: flex; /* 버튼들을 가로로 배치 */
@@ -82,20 +55,60 @@
 </head>
 <body>
     <div style="display: flex;">
-
         <!--왼쪽 칸-->
-        <div style="width: 60%; background-color: #ff0000;">
+        <div style="width: 60%;">
             <!--캠 연결 버튼-->
-            <div style="width: 655px; height: 50px; float: right; background-color: #00ff00;">
+            <!--캠 연결 버튼-->
+            <div style="width: 655px; height: 50px; float: right;">
                 <p style="display: inline-block; margin-top: 10px;">
-                    <button id="connectButton">캠 연결</button>
-                    <button id="disconnectButton" class="hidden">캠 해제</button>
+                    <button id="connectButton" class="sky-button">캠 연결</button>
+                    <button id="disconnectButton" class="red-button hidden">캠 해제</button>
                 </p>
+
                 <p style="display: inline-block; margin-bottom: 10px;">
-                    <button id="practiceButton" onclick="sendConnectPython(); cunnectWebsocket();">서버 실행</button>
-                    <button id="DestroyButton" onclick="sendDestroyPython();" class="hidden">서버 종료</button>
+                    <button id="practiceButton" class="sky-button" onclick="sendConnectPython(); cunnectWebsocket();">서버 실행</button>
+                    <button id="DestroyButton" class="red-button hidden" onclick="sendDestroyPython();">서버 종료</button>
                 </p>
             </div>
+
+            <style>
+                .sky-button {
+                    background-color: #1E90FF; /* 더 파란색으로 변경 */
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 10px 15px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin: 0 5px;
+                    transition: background-color 0.3s;
+                }
+
+                .sky-button:hover {
+                    background-color: #00BFFF; /* 호버 시 더 진한 하늘색 */
+                }
+
+                .hidden {
+                    display: none;
+                }
+
+                .red-button {
+                    background-color: #FF7F7F; /* 연한 빨간색 */
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 10px 15px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin: 0 5px;
+                    transition: background-color 0.3s;
+                }
+
+                .red-button:hover {
+                    background-color: #FF4C4C; /* 호버 시 더 진한 빨간색 */
+                }
+            </style>
+
 
             <!--캠이 출력되는 이미지-->
             <div style="float: right; margin: 10px 15px 10px 10px;"> <!--위, 오른쪽, 아래, 왼쪽 여백 순서-->
@@ -107,190 +120,176 @@
 
 
 
-
         <!--오른쪽 칸-->
-        <div style="width: 40%; height: 40%; background-color: #1100ff; display: flex; align-items: flex-start;">
-            <!--캠 화면을 제어하는 구문, 캠이 연결된 경우에 show, 아니면 hidden-->
+        <!--캠 화면을 제어하는 구문, 캠이 연결된 경우에 show, 아니면 hidden-->
+        <div style="width: 40%; height: 40%; display: flex; align-items: flex-start;">
 
-            
-            <!-- 직사각형 박스 -->
-            <div style="width: 300px; height: 480px; background-color: #ffffff; border: 2px solid #000; margin-top: 60px; margin-left: 10px;">
-                <!-- 여기에 추가 내용을 넣을 수 있습니다 -->
-                <div style="height: 70%; background-color: #55558d;">
-                    <!-- 색상 버튼 첫 번째 줄 -->
-                    <div class="color-button-container" style="margin-top: 50px;">
-                        <button class="color-button btn01"></button>
-                        <button class="color-button btn02"></button>
-                        <button class="color-button btn03"></button>
-                        <button class="color-button btn04"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn05"></button>
-                        <button class="color-button btn06"></button>
-                        <button class="color-button btn07"></button>
-                        <button class="color-button btn08"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn09"></button>
-                        <button class="color-button btn10"></button>
-                        <button class="color-button btn11"></button>
-                        <button class="color-button btn12"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn13"></button>
-                        <button class="color-button btn14"></button>
-                        <button class="color-button btn15"></button>
-                        <button class="color-button btn16"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn17"></button>
-                        <button class="color-button btn18"></button>
-                        <button class="color-button btn19"></button>
-                        <button class="color-button btn20"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn21"></button>
-                        <button class="color-button btn22"></button>
-                        <button class="color-button btn23"></button>
-                        <button class="color-button btn24"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn25"></button>
-                        <button class="color-button btn26"></button>
-                        <button class="color-button btn27"></button>
-                        <button class="color-button btn28"></button>
-                    </div>
-                    <div class="color-button-container">
-                        <button class="color-button btn29"></button>
-                        <button class="color-button btn30"></button>
-                        <button class="color-button btn31"></button>
-                        <button class="color-button btn32"></button>
-                        <div id="colorBox" class="color-button"></div>        <!-- 바뀌는 박스 -->
-                    </div>
-
+            <!--메이크업 선택 버튼-->
+            <div id="SelectMakeupButton" class="hidden" style="width: 300px; height: 480px; background-color: #ffffff; border: 2px solid #ffffff; margin-top: 60px; margin-left: 10px;">
+                <!--파운데이션 샐랙트 박스 이동 버튼-->
+                <div>
+                    <button id="showFdMakeupSelectBox" style="margin-left: 25px; margin-top: 0%" onclick="showHideSelect('FdMakeupSelectBox', 'SelectMakeupButton', 'LipMakeupSelectBox');">
+                        <img th:src="@{/buttonImage/skin_button.png}" style="height: 70px; width: 70px;" alt="이미지">
+                    </button>
                 </div>
-                <!--슬라이더, 닫기버튼-->
-                <div style="height: 20%; background-color: #5b9b36;">
-                    <div style="margin-left: 20px;">
-                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" />
+                <!--립 샐랙트 박스 이동 버튼-->
+                <div>
+                    <button id="showLipMakeupSelectBox" style="margin-left: 25px; margin-top: 40%" onclick="showHideSelect('LipMakeupSelectBox', 'SelectMakeupButton', 'FdMakeupSelectBox');">
+                        <img th:src="@{/buttonImage/lip_button.png}" style="height: 70px; width: 70px;" alt="이미지">
+                    </button>
+                </div>
+                <!--아이라인 샐랙트 박스 이동 버튼 예정-->
+                <div>
+                    <button style="margin-left: 25px; margin-top: 40%">
+                        <img th:src="@{/buttonImage/lip_button.png}" style="height: 70px; width: 70px;" alt="이미지">
+                    </button>
+                </div>
+            </div>
+
+
+
+            <!-- 파운데이션 샐랙트 박스 -->
+            <div id="FdMakeupSelectBox" class="hidden" style="width: 300px; height: 480px; background-color: #339adf; border: 2px solid #000; margin-top: 60px; margin-left: 10px;">
+
+                <div style="height: auto;">
+                    <div class="color-button-container" style="margin-top: 40px;">
+                        <button class="color-button" style="background-color: red;" onclick="changeColor('#ff0000', 'Fd_colorBox'); sendButtonValue('#ff0000', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: green;" onclick="changeColor('#00ff00', 'Fd_colorBox'); sendButtonValue('#00ff00', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: blue;" onclick="changeColor('#0000ff', 'Fd_colorBox'); sendButtonValue('#0000ff', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: yellow;" onclick="changeColor('#ffff00', 'Fd_colorBox'); sendButtonValue('#ffff00', '/FdBtnColor');"></button>
                     </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: orange;" onclick="changeColor('#ff7f00', 'Fd_colorBox'); sendButtonValue('#ff7f00', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: purple;" onclick="changeColor('#800080', 'Fd_colorBox'); sendButtonValue('#800080', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: pink;" onclick="changeColor('#ffc0cb', 'Fd_colorBox'); sendButtonValue('#ffc0cb', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: cyan;" onclick="changeColor('#00ffff', 'Fd_colorBox'); sendButtonValue('#00ffff', '/FdBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: brown;" onclick="changeColor('#a52a2a', 'Fd_colorBox'); sendButtonValue('#a52a2a', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: gray;" onclick="changeColor('#808080', 'Fd_colorBox'); sendButtonValue('#808080', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: lightcoral;" onclick="changeColor('#f08080', 'Fd_colorBox'); sendButtonValue('#f08080', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: lightgreen;" onclick="changeColor('#90ee90', 'Fd_colorBox'); sendButtonValue('#90ee90', '/FdBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: lightblue;" onclick="changeColor('#add8e6', 'Fd_colorBox'); sendButtonValue('#add8e6', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: lavender;" onclick="changeColor('#e6e6fa', 'Fd_colorBox'); sendButtonValue('#e6e6fa', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: gold;" onclick="changeColor('#ffd700', 'Fd_colorBox'); sendButtonValue('#ffd700', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: salmon;" onclick="changeColor('#fa8072', 'Fd_colorBox'); sendButtonValue('#fa8072', '/FdBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: teal;" onclick="changeColor('#008080', 'Fd_colorBox'); sendButtonValue('#008080', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: navy;" onclick="changeColor('#000080', 'Fd_colorBox'); sendButtonValue('#000080', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: maroon;" onclick="changeColor('#800000', 'Fd_colorBox'); sendButtonValue('#800000', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: olive;" onclick="changeColor('#808000', 'Fd_colorBox'); sendButtonValue('#808000', '/FdBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: coral;" onclick="changeColor('#ff7f50', 'Fd_colorBox'); sendButtonValue('#ff7f50', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: plum;" onclick="changeColor('#dda0dd', 'Fd_colorBox'); sendButtonValue('#dda0dd', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: khaki;" onclick="changeColor('#f0e68c', 'Fd_colorBox'); sendButtonValue('#f0e68c', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: chocolate;" onclick="changeColor('#d2691e', 'Fd_colorBox'); sendButtonValue('#d2691e', '/FdBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: sienna;" onclick="changeColor('#a0522d', 'Fd_colorBox'); sendButtonValue('#a0522d', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: slateblue;" onclick="changeColor('#6a5acd', 'Fd_colorBox'); sendButtonValue('#6a5acd', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: mediumseagreen;" onclick="changeColor('#3cb371', 'Fd_colorBox'); sendButtonValue('#3cb371', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: lightsalmon;" onclick="changeColor('#ffa07a', 'Fd_colorBox'); sendButtonValue('#ffa07a', '/FdBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: lightgray;" onclick="changeColor('#d3d3d3', 'Fd_colorBox'); sendButtonValue('#d3d3d3', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: darkorange;" onclick="changeColor('#ff8c00', 'Fd_colorBox'); sendButtonValue('#ff8c00', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: springgreen;" onclick="changeColor('#00ff7f', 'Fd_colorBox'); sendButtonValue('#00ff7f', '/FdBtnColor');"></button>
+                        <button class="color-button" style="background-color: violet;" onclick="changeColor('#ee82ee', 'Fd_colorBox'); sendButtonValue('#ee82ee', '/FdBtnColor');"></button>
+                    <div id="Fd_colorBox" class="color-button, colorBox"></div>
+                    </div>
+                </div>
 
-                    <div style="margin-left: 20px;">
-                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" style="width: 80%; height: 15px;" />
-                        
+                <!--슬라이더-->
+                <div>
+                    <div style= "margin-top: 10px; margin-left: 20px; ">
+                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value, '/FdSlider')" style="accent-color: rgb(133, 9, 71); width: 90%;" />
+                    </div>
+                </div>
 
-                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" style="width: 80%; height: 15px; -webkit-appearance: none; appearance: none;" />
-
-                        <style>
-                        input[type=range] {
-                            -webkit-appearance: none;
-                            appearance: none;
-                            width: 100%;
-                        }
-
-                        /* 슬라이더의 트랙 스타일 */
-                        input[type=range]::-webkit-slider-runnable-track {
-                            height: 8px; /* 트랙의 높이 */
-                            background: #ddd; /* 트랙 색상 */
-                        }
-
-                        input[type=range]::-moz-range-track {
-                            background: #ddd; /* 트랙 색상 */
-                        }
-
-                        /* 핸들 크기 및 스타일 */
-                        input[type=range]::-webkit-slider-thumb {
-                            -webkit-appearance: none;
-                            appearance: none;
-                            width: 30px; /* 핸들의 너비 */
-                            height: 30px; /* 핸들의 높이 */
-                            background: #4CAF50; /* 핸들의 색상 */
-                            border-radius: 50%; /* 핸들을 둥글게 */
-                            cursor: pointer;
-                            margin-top: -11px; /* 핸들이 트랙 중앙에 오도록 조정 */
-                        }
-
-                        input[type=range]::-moz-range-thumb {
-                            width: 30px; /* 핸들의 너비 */
-                            height: 30px; /* 핸들의 높이 */
-                            background: #4CAF50; /* 핸들의 색상 */
-                            border-radius: 50%; /* 핸들을 둥글게 */
-                            cursor: pointer;
-                        }
-                        </style>
+                <!--닫기버튼-->
+                <div>
+                    <div class="container mt-3">
+                        <button class="btn" onclick="showHideSelect('SelectMakeupButton', 'LipMakeupSelectBox', 'FdMakeupSelectBox');" style="background-color: rgb(255, 255, 255); font-size: 12px; width: 50px; height: 30px; color: red; float: right; margin-right: 15px;">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
 
 
 
+            <!-- 립 샐랙트 박스 -->
+            <div id="LipMakeupSelectBox" class="hidden" style="width: 300px; height: auto; background-color: #5154ec; border: 2px solid #5154ec; margin-top: 100px; margin-left: 10px;">
 
+                <div>
+                    <div class="color-button-container" style="margin-top: 30px;">
+                        <button class="color-button" style="background-color: red;" onclick="changeColor('#ff0000', 'Lip_colorBox'); sendButtonValue('#ff0000', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: green;" onclick="changeColor('#00ff00', 'Lip_colorBox'); sendButtonValue('#00ff00', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: blue;" onclick="changeColor('#0000ff', 'Lip_colorBox'); sendButtonValue('#0000ff', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: yellow;" onclick="changeColor('#ffff00', 'Lip_colorBox'); sendButtonValue('#ffff00', '/LipBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: orange;" onclick="changeColor('#ff7f00', 'Lip_colorBox'); sendButtonValue('#ff7f00', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: purple;" onclick="changeColor('#800080', 'Lip_colorBox'); sendButtonValue('#800080', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: pink;" onclick="changeColor('#ffc0cb', 'Lip_colorBox'); sendButtonValue('#ffc0cb', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: cyan;" onclick="changeColor('#00ffff', 'Lip_colorBox'); sendButtonValue('#00ffff', '/LipBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: brown;" onclick="changeColor('#a52a2a', 'Lip_colorBox'); sendButtonValue('#a52a2a', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: gray;" onclick="changeColor('#808080', 'Lip_colorBox'); sendButtonValue('#808080', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: lightcoral;" onclick="changeColor('#f08080', 'Lip_colorBox'); sendButtonValue('#f08080', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: lightgreen;" onclick="changeColor('#90ee90', 'Lip_colorBox'); sendButtonValue('#90ee90', '/LipBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: lightblue;" onclick="changeColor('#add8e6', 'Lip_colorBox'); sendButtonValue('#add8e6', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: lavender;" onclick="changeColor('#e6e6fa', 'Lip_colorBox'); sendButtonValue('#e6e6fa', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: gold;" onclick="changeColor('#ffd700', 'Lip_colorBox'); sendButtonValue('#ffd700', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: salmon;" onclick="changeColor('#fa8072', 'Lip_colorBox'); sendButtonValue('#fa8072', '/LipBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: teal;" onclick="changeColor('#008080', 'Lip_colorBox'); sendButtonValue('#008080', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: navy;" onclick="changeColor('#000080', 'Lip_colorBox'); sendButtonValue('#000080', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: maroon;" onclick="changeColor('#800000', 'Lip_colorBox'); sendButtonValue('#800000', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: olive;" onclick="changeColor('#808000', 'Lip_colorBox'); sendButtonValue('#808000', '/LipBtnColor');"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: coral;" onclick="changeColor('#ff7f50', 'Lip_colorBox'); sendButtonValue('#ff7f50', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: plum;" onclick="changeColor('#dda0dd', 'Lip_colorBox'); sendButtonValue('#dda0dd', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: khaki;" onclick="changeColor('#f0e68c', 'Lip_colorBox'); sendButtonValue('#f0e68c', '/LipBtnColor');"></button>
+                        <button class="color-button" style="background-color: chocolate;" onclick="changeColor('#d2691e', 'Lip_colorBox'); sendButtonValue('#d2691e', '/LipBtnColor');"></button>
+                        <div id="Lip_colorBox" class="color-button, colorBox"></div>
+                    </div>
+                </div>
 
+                <!--슬라이더-->
+                <div>
+                    <div style= "margin-top: 10px; margin-left: 20px; ">
+                        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value,'/LipSlider');" style="accent-color: rgb(133, 9, 71); width: 90%;" />
+                    </div>
+                </div>
 
-
-
-                    
-                    
-                    
-                    
+                <!--닫기버튼-->
+                <div>
+                    <div class="container mt-3">
+                        <button class="btn" onclick="showHideSelect('SelectMakeupButton', 'LipMakeupSelectBox', 'FdMakeupSelectBox');" style="background-color: rgb(255, 255, 255); font-size: 12px; width: 50px; height: 30px; color: red; float: right; margin-right: 10px;" oninput="sendSliderValue(this.value, '/LipSlider')">
+                            닫기
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
 
 
-    <p>
-        <h1>Webcam Feed</h1>
-        <div class="webcamStream">
-            <img id="video" class="hidden" src="" alt="Video Feed"/>
-        </div>
-    </p>
-    
-    <button id="connectButton">캠 연결</button>
-    <button id="disconnectButton" class="hidden">캠 해제</button>
-
-
-    <p>
-        <button id="practiceButton" onclick="sendConnectPython(); cunnectWebsocket();">서버 실행</button>
-        <button id="DestroyButton" onclick="sendDestroyPython();" class="hidden" >서버 종료</button>
-    </p>
-
-    <p id="colorSelect" class="hidden"></p>
-    <h1>캠이 연결되면 보일 부분들</h1>
-
-    <p>
-        <h4>슬라이더 값 변경</h4>
-        <input type="range" min="0" max="100" value="0" oninput="sendSliderValue(this.value)" />
-    </p>
-
-    <p>
-    <h4>버튼 값 전송</h4>
-        <div id="colorBox" class="color-button"></div>        <!-- 바뀌는 박스 -->
-        <button class="color-button" style="background-color: #ff0000;" onclick="changeColor('#ff0000'); sendButtonValue('#ff0000');"></button>
-        <button class="color-button" style="background-color: #0000ff;" onclick="changeColor('#0000ff'); sendButtonValue('#0000ff');"></button>
-        <button class="color-button" style="background-color: #00ff00;" onclick="changeColor('#00ff00'); sendButtonValue('#00ff00');"></button>
-    </p>
-
-
     <script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ////////////////// 슬라이더 값 POST로 전송 ///////////////////
-        function sendSliderValue(value) {
-            fetch('/slider', {
+        function sendSliderValue(value, endpoint) {
+            fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -299,8 +298,8 @@
             });
         }
         /////////////////// 버튼 값 POST로 전송 ///////////////////
-        function sendButtonValue(value) {
-            fetch('/btnColor', {
+        function sendButtonValue(value, endpoint) {
+            fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -308,13 +307,26 @@
                 body: JSON.stringify({ hex: value })
             });
         }
-        ////////////////// 색 바꾸기 //////////////////
-        function changeColor(color) {
-            const colorBox = document.getElementById('colorBox');
-            colorBox.style.backgroundColor = color;
-            colorBox.style.backgroundImage = 'none'; // 배경 패턴 없애기
-            console.log(`선택된 색상: ${color}`); // 선택된 색상 HEX 코드 콘솔 로그 출력
+
+        //////////////////////////////////// 버튼 보이기 ////////////////////////////////////
+        function showHideSelect(showId, hideId1, hideId2) {
+            document.querySelector(`#${showId}`).style.display = "block"; // 보이게
+            document.querySelector(`#${hideId1}`).style.display = "none"; // 숨기기
+            document.querySelector(`#${hideId2}`).style.display = "none"; // 숨기기
         }
+        ////////////////// 색 바꾸기 //////////////////
+        function changeColor(color, htmlId) {
+            const colorBox = document.getElementById(htmlId); // id로 요소 찾기
+            if (colorBox) {
+                colorBox.style.backgroundColor = color;
+                colorBox.style.backgroundImage = 'none'; // 배경 패턴 없애기
+                console.log(`선택된 색상: ${color}`); // 선택된 색상 HEX 코드 콘솔 로그 출력
+            } else {
+                console.error(`요소 '${htmlClass}'를 찾을 수 없습니다.`);
+            }
+        }
+
+
         //////////////////// 동작과 동시에 비디오 연결 //////////////////////
         const videoElement = document.getElementById('video');
         const websocket = new WebSocket('ws://127.0.0.1:8080/video-feed');
@@ -340,7 +352,6 @@
                 videoElement.src = url;
             };
         }
-        
 
         ///////////////// 비디오 버튼 /////////////////
         const video = document.getElementById('video');
@@ -357,10 +368,13 @@
             connectButton.classList.add('hidden'); // 연결 버튼 숨김
             disconnectButton.classList.remove('hidden'); // 해제 버튼 표시
             streamActive = true; // 스트림 상태 업데이트
+            showHideSelect('SelectMakeupButton', 'LipMakeupSelectBox', 'FdMakeupSelectBox');
         });
-
         // 캠 해제 버튼 클릭 시
         disconnectButton.addEventListener('click', () => {
+            document.querySelector('#SelectMakeupButton').style.display = "none"; // 숨기기
+            document.querySelector('#LipMakeupSelectBox').style.display = "none"; // 숨기기
+            document.querySelector('#FdMakeupSelectBox').style.display = "none"; // 숨기기
             // video.style.backgroundImage = ''; // 스트림 해제
             video.classList.add('hidden'); // 박스 숨기기
             connectButton.classList.remove('hidden'); // 연결 버튼 표시
@@ -369,11 +383,11 @@
             alert('캠이 해제되었습니다.'); // 경고 창 표시
         });
 
-        ///////////// 프로세스 제어 //////////////
-        const practiceButton = document.getElementById('practiceButton');
-        const DestroyButton = document.getElementById('DestroyButton');
-        ///////////// 프로세스 연결 //////////////
+
+        ///////////// python 프로세스 연결 //////////////
         function sendConnectPython() {
+            const practiceButton = document.getElementById('practiceButton');
+            const DestroyButton = document.getElementById('DestroyButton');
             fetch('/practice', {
                 method: 'POST',
                 headers: {
@@ -393,8 +407,10 @@
                 alert('/practice: 네트워크 오류가 발생했습니다: ' + error);
             });
         }
-        ///////////// 프로세스 종료 //////////////
+        ///////////// python 프로세스 종료 //////////////
         function sendDestroyPython() {
+            const practiceButton = document.getElementById('practiceButton');
+            const DestroyButton = document.getElementById('DestroyButton');
             fetch('/shutdown', {
                 method: 'POST',
                 headers: {
@@ -415,5 +431,9 @@
             });
         }
     </script>
+    <!-- 부트스트랩 JS (옵션) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

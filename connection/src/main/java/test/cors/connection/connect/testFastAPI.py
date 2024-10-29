@@ -95,8 +95,6 @@ def set_TxtValue(key, value):
             for k, v in params.items():
                 f.write(f"{k}={v}\n")  # 기록
 
-
-
 def hex_to_bgr(hex_code):
     # 헥사 코드 형식 확인
     if not isinstance(hex_code, str) or not (len(hex_code) == 7 and hex_code.startswith('#')):
@@ -115,30 +113,46 @@ def hex_to_bgr(hex_code):
     # BGR 형식으로 반환
     return (b, g, r)
 
-
-
 class Foundation(BaseModel):
+    opacity: int = 0
+    hex: str = "0"
+
+class LIP(BaseModel):
     opacity: int = 0
     hex: str = "0"
 
 # # 전역 변수로 foundation 인스턴스 생성, 비동기가 변하는 전역변수를 못읽음
 # foundation = Foundation()
 
-@app.post("/slider")
+@app.post("/FdSlider") # Fd_opacity
 async def slider_data(data: Foundation):
-    set_TxtValue("opacity", data.opacity)
+    set_TxtValue("Fd_opacity", data.opacity)
     print("Received:", data.opacity, type(data.opacity))
     return {"message": "Data received", "received": data.opacity}
 
-@app.post("/btnColor")
+@app.post("/FdBtnColor") # Fd_hex Fd_bgr_color
 async def slider_data(data: Foundation):
     print(params_file, data.hex, type(data.hex))
     bgr_color = hex_to_bgr(data.hex)
-    set_TxtValue("hex", data.hex)
-    set_TxtValue("bgr_color", bgr_color)
+    set_TxtValue("Fd_hex", data.hex)
+    set_TxtValue("Fd_bgr_color", bgr_color)
     print(f"bgr = {bgr_color}")
     return {"message": "Data received", "received": data.hex}
 
+@app.post("/LipSlider") # Lip_opacity
+async def slider_data(data: LIP):
+    set_TxtValue("Lip_opacity", data.opacity)
+    print("Received:", data.opacity, type(data.opacity))
+    return {"message": "Data received", "received": data.opacity}
+
+@app.post("/LipBtnColor") # Lip_Hex Lip_bgr_color
+async def slider_data(data: LIP):
+    print(params_file, data.hex, type(data.hex))
+    bgr_color = hex_to_bgr(data.hex)
+    set_TxtValue("Lip_Hex", data.hex)
+    set_TxtValue("Lip_bgr_color", bgr_color)
+    print(f"bgr = {bgr_color}")
+    return {"message": "Data received", "received": data.hex}
 
 
 ## 서버 종료
@@ -151,8 +165,10 @@ async def shutdown():
 
 
 def putText_frames(frame_copy, text, color, yArea):
-    if not isinstance(text, str):
-        text = str(text)
+    # if not isinstance(text, str):
+    #     text = str(text)
+    if text == '0':
+        return
     return cv2.putText(frame_copy, text, (10, yArea), 
                        cv2.FONT_HERSHEY_SIMPLEX, 1, 
                        color, 2)
@@ -179,15 +195,16 @@ async def video_feed(websocket: WebSocket):
 
             # # 매개변수를 텍스트로 출력
             # opacity:str / hex:str / bgr_color:Tuple(int,int,int)
-            text = f"opacity: {params['opacity']}"
-
-            if text == f"opacity: {100}":
+            if params['Fd_opacity'] == "100":
                 putText_frames(frame, "MAX", (0,255,255), 30)
             else:
-                putText_frames(frame, text, params['bgr_color'], 30)
+                putText_frames(frame, f"opacity: {params['Fd_opacity']}", params['Fd_bgr_color'], 30)
 
+            if params['Lip_opacity'] == "100":
+                putText_frames(frame, "MAX", (0,255,255), 60)
+            else:
+                putText_frames(frame, f"opacity: {params['Lip_opacity']}", params['Lip_bgr_color'], 60)
 
-            
             # 프레임을 JPEG 형식으로 인코딩
             _, buffer = cv2.imencode('.jpg', frame)
             bytes_data = buffer.tobytes()
@@ -240,9 +257,12 @@ if __name__ == "__main__":
         print("웹캠을 사용할 수 있습니다.")
     
     # txt 초기값
-    set_TxtValue("opacity",0)
-    set_TxtValue("hex","#000000")
-    set_TxtValue("bgr_color",hex_to_bgr("#000000"))
+    set_TxtValue("Fd_opacity",0)
+    set_TxtValue("Fd_hex","#000000")
+    set_TxtValue("Fd_bgr_color",hex_to_bgr("#000000"))
+    set_TxtValue("Lip_opacity",0)
+    set_TxtValue("Lip_Hex","#000000")
+    set_TxtValue("Lip_bgr_color",hex_to_bgr("#000000"))
 
     ## 뒤에 있어야함. 그래야  txt 초기화 코드가 실행됨, 근데뭔가뭔가하자가있는듯함뭔가뭔가임기분탓같은데뭔가뭔가뭔가임
     uvicorn.run(app, port=8080)
@@ -256,4 +276,6 @@ if __name__ == "__main__":
 ## 종료방법 :
 ### tasklist | findstr python
 ### netstat -ano | findstr :"포트번호"
+### netstat -ano | findstr :8080
 ### taskkill /F /PID "PID번호"
+### taskkill /F /PID 

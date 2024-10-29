@@ -15,7 +15,6 @@ import test.cors.connection.connect.dataSendService;
 @CrossOrigin(origins = "http://localhost:8080")
 @Controller
 public class mainController {
-
     private PythonRunner pythonRunner = new PythonRunner();
     private boolean pythonServerRunning = false;
 
@@ -75,18 +74,34 @@ public class mainController {
     // }
 
     // Post 요청
-    @PostMapping("/slider")
-    public String getSliderValue(@RequestBody SliderValue sliderValue) {
-        dataSendService.sendIntVariable(sliderValue.getOpacity(), "/slider");
-        System.out.println("Received slider value: " + sliderValue.getOpacity());
+    @PostMapping("/FdSlider")
+    public String getFdSliderValue(@RequestBody SliderValue sliderValue) {
+        dataSendService.sendIntVariable(sliderValue.getOpacity(), "/FdSlider");
+        System.out.println("Received FdSlider: " + sliderValue.getOpacity());
         return "makeup";
     }
 
     // Post 요청
-    @PostMapping("/btnColor")
-    public String getBtnColor(@RequestBody BtnValue btnValue) {
-        dataSendService.sendStringVariable(btnValue.getHex(), "/btnColor");
-        System.out.println("Received btnColor : " + btnValue.getHex());
+    @PostMapping("/FdBtnColor")
+    public String getFdBtnColorValue(@RequestBody BtnValue btnValue) {
+        dataSendService.sendStringVariable(btnValue.getHex(), "/FdBtnColor");
+        System.out.println("Received FdBtnColor : " + btnValue.getHex());
+        return "makeup";
+    }
+
+    // Post 요청
+    @PostMapping("/LipSlider")
+    public String getLipSliderValue(@RequestBody SliderValue sliderValue) {
+        dataSendService.sendIntVariable(sliderValue.getOpacity(), "/LipSlider");
+        System.out.println("Received LipSlider: " + sliderValue.getOpacity());
+        return "makeup";
+    }
+
+    // Post 요청
+    @PostMapping("/LipBtnColor")
+    public String getLipBtnColorValue(@RequestBody BtnValue btnValue) {
+        dataSendService.sendStringVariable(btnValue.getHex(), "/LipBtnColor");
+        System.out.println("Received LipBtnColor : " + btnValue.getHex());
         return "makeup";
     }
 

@@ -1,3 +1,6 @@
-opacity=0
-hex=#000000
-bgr_color=(0, 0, 0)
+Lip_bgr_color=(0, 0, 0)
+Lip_Hex=#000000
+Fd_opacity=100
+Fd_hex=#ffd700
+Fd_bgr_color=(0, 215, 255)
+Lip_opacity=100

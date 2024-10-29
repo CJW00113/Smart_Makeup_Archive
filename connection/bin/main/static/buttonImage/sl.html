@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Input Example</title>
+    <style>
+        .rangeInput{
+        width: 90%;
+        background: linear-gradient(to right, #6537a1 0%, #6537a1 50%, #ececec 50%, #ececec 100%);
+        border-radius: 8px;
+        outline: none;
+        transition: background 450ms ease-in;
+        -webkit-appearance: none;
+        accent-color: #6537a1;  /* 슬라이드 바 원 */
+        }
+    </style>
+</head>
+<body>
+    <button>
+        <img src="skin_button.png">
+    </button>
+    <div style="height: 300px; width: 300px; background-color: rgb(48, 63, 17);">
+        <h1>슬라이더 색상 변경</h1>
+        <input type="range" min="0" max="100" value="50">
+        <input id="rangeInput" class="rangeInput" min="0" max="100" step="1" type="range" />
+    </div>
+</body>
+    <script>
+        document.querySelector('.rangeInput').addEventListener('input',function(event){
+            var gradient_value = 100 / event.target.attributes.max.value;
+            event.target.style.background = 'linear-gradient(to right, #6537a1 0%, #6537a1 '+gradient_value * event.target.value +'%, rgb(236, 236, 236) ' +gradient_value *  event.target.value + '%, rgb(236, 236, 236) 100%)';
+        });
+    </script>
+</html>
