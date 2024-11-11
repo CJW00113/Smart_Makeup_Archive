@@ -45,53 +45,35 @@ params = {}
 params_lock = threading.Lock()
 params_file = "src\\main\\java\\com\\smwhc\\smart_makeup_web\\WebCam\\params.txt"
 
+# 초기 값 설정
+data_store = {
+    "lip_bgr": (0, 0, 0),
+    "lip_hex": "#000000",
+    "fd_bgr": (0, 0, 0),
+    "fd_hex": "#000000",
+    "lip_opacity": 0,
+    "fd_opacity": 0
+}
 
-# # 비동기 큐 생성
-# lip_bgr_queue = asyncio.Queue()
-# lip_hex_queue = asyncio.Queue()
-# fd_opacity_queue = asyncio.Queue()
-# fd_hex_queue = asyncio.Queue()
-# fd_bgr_queue = asyncio.Queue()
-# lip_opacity_queue = asyncio.Queue()
 
-# # 큐가 비어 있으면 초기값을 넣는 함수
-# async def check_and_add_initial_value():
-#     try:
-#         if lip_bgr_queue.empty():  # lip_bgr_queue가 비어 있으면
-#             # 초기값을 넣음
-#             # 비동기 큐에 초기값 넣기
-#             await lip_bgr_queue.put((0, 0, 0))         # Lip_bgr_color 초기값 (검정색)
-#             await lip_hex_queue.put("#000000")          # Lip_Hex 초기값 (검정색)
-#             await fd_opacity_queue.put(0)               # Fd_opacity 초기값 (0)
-#             await fd_hex_queue.put("#000000")           # Fd_hex 초기값 (검정색)
-#             await fd_bgr_queue.put((0, 0, 0))           # Fd_bgr_color 초기값 (검정색)
-#             await lip_opacity_queue.put(0)              # Lip_opacity 초기값 (0)
-#             print("초기값을 넣었습니다.")
-        
-#         # 각 큐에서 값을 가져오고 그 타입 출력
-#         lip_bgr_value = await lip_bgr_queue.get()
-#         print(f"lip_bgr_queue에서 꺼낸 데이터 타입: {type(lip_bgr_value)}")  # 튜플 (int, int, int)
 
-#         lip_hex_value = await lip_hex_queue.get()
-#         print(f"lip_hex_queue에서 꺼낸 데이터 타입: {type(lip_hex_value)}")  # 문자열 (str)
-
-#         fd_opacity_value = await fd_opacity_queue.get()
-#         print(f"fd_opacity_queue에서 꺼낸 데이터 타입: {type(fd_opacity_value)}")  # 정수 (int)
-
-#         fd_hex_value = await fd_hex_queue.get()
-#         print(f"fd_hex_queue에서 꺼낸 데이터 타입: {type(fd_hex_value)}")  # 문자열 (str)
-
-#         fd_bgr_value = await fd_bgr_queue.get()
-#         print(f"fd_bgr_queue에서 꺼낸 데이터 타입: {type(fd_bgr_value)}")  # 튜플 (int, int, int)
-
-#         lip_opacity_value = await lip_opacity_queue.get()
-#         print(f"lip_opacity_queue에서 꺼낸 데이터 타입: {type(lip_opacity_value)}")  # 정수 (int)
-
-#         print("초기값을 넣었습니다.")
+def hex_to_bgr(hex_code):
+    # 헥사 코드 형식 확인
+    if not isinstance(hex_code, str) or not (len(hex_code) == 7 and hex_code.startswith('#')):
+        raise ValueError("유효한 헥사 코드 형식이 아닙니다. 예: '#RRGGBB'")
     
-#     except Exception as e:
-#         print(f"오류가 발생했습니다: {e}")
-
+    hex_code = hex_code.lstrip('#')
+    # 헥사 코드가 6자리인지 확인
+    if len(hex_code) != 6:
+        raise ValueError("유효한 헥사 코드 형식이 아닙니다. 예: '#RRGGBB'")
+    try:
+        r = int(hex_code[0:2], 16)
+        g = int(hex_code[2:4], 16)
+        b = int(hex_code[4:6], 16)
+    except ValueError:
+        raise ValueError("헥사 코드에 잘못된 문자가 포함되어 있습니다.")
+    # BGR 형식으로 반환
+    return (b, g, r)
 
 def load_params():
     """파일에서 파라미터를 읽어와 params 딕셔너리를 초기화합니다."""
@@ -143,23 +125,60 @@ def set_TxtValue(key, value):
             for k, v in params.items():
                 f.write(f"{k}={v}\n")  # 기록
 
-def hex_to_bgr(hex_code):
-    # 헥사 코드 형식 확인
-    if not isinstance(hex_code, str) or not (len(hex_code) == 7 and hex_code.startswith('#')):
-        raise ValueError("유효한 헥사 코드 형식이 아닙니다. 예: '#RRGGBB'")
+
+
+
+
+
+# 값을 비동기적으로 설정하는 함수
+def set_value(key, value):
+    if key not in data_store:
+        raise ValueError(f"Invalid key: {key}")
     
-    hex_code = hex_code.lstrip('#')
-    # 헥사 코드가 6자리인지 확인
-    if len(hex_code) != 6:
-        raise ValueError("유효한 헥사 코드 형식이 아닙니다. 예: '#RRGGBB'")
-    try:
-        r = int(hex_code[0:2], 16)
-        g = int(hex_code[2:4], 16)
-        b = int(hex_code[4:6], 16)
-    except ValueError:
-        raise ValueError("헥사 코드에 잘못된 문자가 포함되어 있습니다.")
-    # BGR 형식으로 반환
-    return (b, g, r)
+    if key == "lip_hex":
+        if not value.startswith("#") or len(value) != 7:
+            raise ValueError(f"Invalid HEX value for {key}: {value}")
+        data_store[key] = value
+        # HEX 값을 BGR로 변환
+        bgr = hex_to_bgr(value)
+        data_store["lip_bgr"] = bgr
+        print(f"Updated {key}: {data_store[key]}")
+        print(f"Updated lip_bgr: {data_store['lip_bgr']}")
+    
+    elif key == "fd_hex":
+        if not value.startswith("#") or len(value) != 7:
+            raise ValueError(f"Invalid HEX value for {key}: {value}")
+        data_store[key] = value
+        # HEX 값을 BGR로 변환
+        bgr = hex_to_bgr(value)
+        data_store["fd_bgr"] = bgr
+        print(f"Updated {key}: {data_store[key]}")
+        print(f"Updated fd_bgr: {data_store['fd_bgr']}")
+    
+    elif key == "lip_opacity":
+        # if not (0 <= value <= 100):
+        #     raise ValueError(f"Invalid opacity value for {key}: {value}")
+        data_store[key] = value
+        print(f"Updated {key}: {data_store[key]}")
+    
+    elif key == "fd_opacity":
+        # if not (0 <= value <= 100):
+        #     raise ValueError(f"Invalid opacity value for {key}: {value}")
+        data_store[key] = value
+        print(f"Updated {key}: {data_store[key]}")
+
+    # lip_bgr, fd_bgr 값도 항상 최신 상태로 출력
+    print(f"Current lip_bgr: {data_store['lip_bgr']}")
+    print(f"Current fd_bgr: {data_store['fd_bgr']}")
+
+# 값을 비동기적으로 가져오는 함수
+def get_value(key):
+    if key not in data_store:
+        raise ValueError(f"Invalid key: {key}")
+    
+    return data_store[key]
+
+
 
 class Foundation(BaseModel):
     opacity: int = 0
@@ -175,7 +194,10 @@ class LIP(BaseModel):
 @app.post("/FdSlider") # Fd_opacity
 async def slider_data(data: Foundation):
     set_TxtValue("Fd_opacity", data.opacity)
-    # await fd_opacity_queue.put(data.opacity)       # Fd_opacity
+
+    # 비동기 큐 생성
+    set_value("fd_opacity", data.opacity)     # FD opacity to 85%
+
     print("Received:", data.opacity, type(data.opacity))
     return {"message": "Data received", "received": data.opacity}
 
@@ -185,15 +207,20 @@ async def slider_data(data: Foundation):
     bgr_color = hex_to_bgr(data.hex)
     set_TxtValue("Fd_hex", data.hex)
     set_TxtValue("Fd_bgr_color", bgr_color)
-    # await fd_hex_queue.put(data.hex)    # Fd_hex
-    # await fd_bgr_queue.put(bgr_color)  # Fd_bgr_color
+
+    # 비동기 큐 생성
+    set_value("fd_hex", data.hex)   # SteelBlue color for fd_hex
+
     print(f"bgr = {bgr_color}")
     return {"message": "Data received", "received": data.hex}
 
 @app.post("/LipSlider") # Lip_opacity
 async def slider_data(data: LIP):
     set_TxtValue("Lip_opacity", data.opacity)
-    # await lip_opacity_queue.put(data.opacity)       # Lip_opacity
+
+    # 비동기 큐 생성
+    set_value("lip_opacity", data.opacity)    # Lip opacity to 75%
+
     print("Received:", data.opacity, type(data.opacity))
     return {"message": "Data received", "received": data.opacity}
 
@@ -203,8 +230,10 @@ async def slider_data(data: LIP):
     bgr_color = hex_to_bgr(data.hex)
     set_TxtValue("Lip_Hex", data.hex)
     set_TxtValue("Lip_bgr_color", bgr_color)
-    # await lip_bgr_queue.put(data.hex)  # Lip_bgr_color
-    # await lip_hex_queue.put(bgr_color)   # Lip_Hex
+
+    # 비동기 큐 생성
+    set_value("lip_hex", data.hex)  # Tomato color for lip_hex
+
     print(f"bgr = {bgr_color}")
     return {"message": "Data received", "received": data.hex}
 
@@ -216,8 +245,6 @@ async def shutdown():
     os._exit(0)  # 0은 정상 종료 상태 코드
     return {"message": "서버가 종료됩니다."}
 
-
-
 def putText_frames(frame_copy, text, color, yArea):
     # if not isinstance(text, str):
     #     text = str(text)
@@ -228,18 +255,14 @@ def putText_frames(frame_copy, text, color, yArea):
                        color, 2)
 
 async def video_feed(websocket: WebSocket):
+
     """ 웹소켓을 통해 웹캠 영상을 클라이언트에 스트리밍하는 함수 """
     await websocket.accept()
-    
     # 웹캠 비디오 캡처 초기화
     cap = cv2.VideoCapture(0)
-
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    
     print(f"카메라 해상도: {width} x {height}")
-
-
 
     try:
         while True:
@@ -248,16 +271,25 @@ async def video_feed(websocket: WebSocket):
             if not ret: # 프레임을 못읽었다면, break
                 break
 
-            # # 값 가져오기 (asyncio 작업)
-            # lip_bgr_value = await lip_bgr_queue.get()
-            # # lip_hex_value = await lip_hex_queue.get()
-            # fd_opacity_value = await fd_opacity_queue.get()
-            # # fd_hex_value = await fd_hex_queue.get()
-            # fd_bgr_value = await fd_bgr_queue.get()
-            # lip_opacity_value = await lip_opacity_queue.get()
+            # 값 가져오기
+            lip_bgr = get_value("lip_bgr")
+            lip_hex = get_value("lip_hex")
+            fd_bgr = get_value("fd_bgr")
+            fd_hex = get_value("fd_hex")
+            lip_opacity = get_value("lip_opacity")
+            fd_opacity = get_value("fd_opacity")
+
+            # 한 번에 모든 값과 타입 출력
+            print(
+                f"lip_bgr: {lip_bgr}, 타입: {type(lip_bgr)} | "
+                f"lip_hex: {lip_hex}, 타입: {type(lip_hex)} | "
+                f"fd_opacity: {fd_opacity}, 타입: {type(fd_opacity)} | "
+                f"lip_opacity: {lip_opacity}, 타입: {type(lip_opacity)} | "
+                f"fd_bgr: {fd_bgr}, 타입: {type(fd_bgr)} | "
+                f"fd_hex: {fd_hex}, 타입: {type(fd_hex)}"
+            )
 
             load_params()  # 주기적으로 매개변수 읽기
-            
             # # 매개변수를 텍스트로 출력
             # opacity:str / hex:str / bgr_color:Tuple(int,int,int)
             if params['Fd_opacity'] == "100":
@@ -270,16 +302,20 @@ async def video_feed(websocket: WebSocket):
             else:
                 putText_frames(frame, f"opacity: {params['Lip_opacity']}", params['Lip_bgr_color'], 60)
 
-            # if fd_opacity_value == "100":
+
+
+            # # fd_opacity 처리
+            # if fd_opacity == "100":
             #     putText_frames(frame, "MAX", (0, 255, 255), 30)
             # else:
-            #     putText_frames(frame, f"opacity: {fd_opacity_value}", fd_bgr_value, 30)
-
-            # # Lip_opacity 처리
-            # if lip_opacity_value == "100":
+            #     putText_frames(frame, f"FDopacity: {fd_opacity}", fd_bgr, 30)
+            # # lip_opacity 처리
+            # if lip_opacity == "100":
             #     putText_frames(frame, "MAX", (0, 255, 255), 60)
             # else:
-            #     putText_frames(frame, f"opacity: {lip_opacity_value}", lip_bgr_value, 60)
+            #     putText_frames(frame, f"LIPopacity: {lip_opacity}", lip_bgr, 60)
+
+
 
             # 프레임을 JPEG 형식으로 인코딩
             _, buffer = cv2.imencode('.jpg', frame)
@@ -305,11 +341,6 @@ async def video_feed(websocket: WebSocket):
 async def feed(websocket: WebSocket):
     """ 웹소켓 엔드포인트 """
     # await websocket.accept()
-    # await check_and_add_initial_value()
-
-    # # 클라이언트로부터 초기 데이터 수신
-    # data = await websocket.receive_text()  # 클라이언트가 전송한 데이터 수신
-    # yourDataObject = YourDataObject(value=data)  # 수신한 데이터로 객체 생성
 
     await video_feed(websocket)
 
@@ -328,11 +359,6 @@ def is_camera_in_use(camera_index=0):
 
 ## 서버 실행 명령어 uvicorn main:app --reload
 if __name__ == "__main__":
-    if is_camera_in_use():
-        print("웹캠이 이미 사용 중입니다.")
-    else:
-        print("웹캠을 사용할 수 있습니다.")
-    
     # txt 초기값
     set_TxtValue("Fd_opacity",0)
     set_TxtValue("Fd_hex","#000000")
@@ -340,7 +366,6 @@ if __name__ == "__main__":
     set_TxtValue("Lip_opacity",0)
     set_TxtValue("Lip_Hex","#000000")
     set_TxtValue("Lip_bgr_color",hex_to_bgr("#000000"))
-
 
     ## 뒤에 있어야함. 그래야  txt 초기화 코드가 실행됨, 근데뭔가뭔가하자가있는듯함뭔가뭔가임기분탓같은데뭔가뭔가뭔가임
     uvicorn.run(app, port=8080)
