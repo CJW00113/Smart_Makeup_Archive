@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>버튼 클릭 시 테두리 제어</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .circle-btn {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: 10px solid transparent;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .circle-btn::before {
+      content: '';
+      width: 100px;
+      height: 100px;
+      background-color: rgb(0, 0, 0); /* 기본 색상 설정 */
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .circle-btn.selected {
+      border-color: black;
+    }
+  </style>
+</head>
+<body>
+  <button class="circle-btn" id="circleBtn" style="--circle-bg-color: rgb(8, 102, 131);"></button>
+
+  <script>
+    // 버튼 클릭 시 내부 원 색상과 테두리 색을 변경하는 함수
+    document.getElementById('circleBtn').addEventListener('click', function() {
+      this.classList.toggle('selected');
+      
+      // 내부 원 색상 변경 (기본값: red)
+      const newColor = this.style.getPropertyValue('--circle-bg-color') === 'burlywood' ? 'red' : 'burlywood';
+      
+      // 내부 원 색상을 style로 직접 설정
+      this.style.setProperty('--circle-bg-color', newColor);
+
+      // ::before의 배경색을 변경
+      const circle = this;
+      circle.querySelector('::before').style.backgroundColor = newColor;
+    });
+  </script>
+</body>
+</html>
+

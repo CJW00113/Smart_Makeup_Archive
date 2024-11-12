@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이미지와 슬라이더</title>
+    <style>
+
+    /* 네모칸 스타일 300px 사용중 (좌우 여백 각 10px씩, 중간 280px*/
+    .slider-box {
+        width: 280px; /* 네모칸 너비 */
+        /* 네모칸 밖 여백 */
+        margin-top: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 20px;
+        /* 네모칸 내부 여백 */
+        padding: 10px;
+        /* 하단은 고정 */
+        border: 2px solid #333; /* 테두리를 추가 (두께 2px, 색상 어두운 회색) */
+        background-color: rgb(214, 175, 175); /* 배경을 흰색으로 설정 */
+        border-radius: 8px; /* 모서리를 둥글게 */
+        position: relative; /* 네모칸을 기준으로 자식 요소의 위치를 설정 */
+    }
+
+    /* 슬라이더 이름을 포함하는 div 스타일 */
+    .slider-label {
+        padding: 0 5px; /* 글자와 테두리 간 간격 */
+
+        position: absolute; /* 네모칸 테두리와 겹치도록 위치 설정 */
+        top: -10px; /* 네모칸의 위쪽으로 10px 이동 */
+        left: 10px; /* 네모칸의 왼쪽 여백 */
+
+        font-size: 12px; /* 글자 크기 */
+        font-weight: bold; /* 굵은 글씨 */
+        color: #333; /* 글자 색상 */
+        background-color: white; /* 배경, 타 바탕과 같도록 설정할것 */
+    }
+
+
+
+
+    /* 이미지들을 가로로 배치하는 스타일 */
+    .image-container {
+        display: flex; /* 이미지를 한 줄에 배치 */
+        justify-content: flex-start; /* 이미지를 왼쪽 정렬 */
+    }
+
+    /* 큰 원 */
+    .outer-circle {
+        width: 30px; 
+        height: 30px;
+        /* 버튼5개->150px 사용(여백130px)*/
+        /* 버튼 4개-> 120px 사용(여백140px) */
+        margin-right: 20px;
+        /* 버튼 5개 -> 50px남음 (30px*5+20px*4 = 230px 사용중)*/
+        /* 버튼 4개-> 100px남음 (30px*4+20px*3 = 180px 사용중)*/
+        
+        border: 2px solid transparent; /* 초기 테두리는 투명 */
+
+        border-radius: 50%; /* 원 형태 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
+    /* 빨간색 내부 원 */
+    .inner-circle {
+        width: 15px; 
+        height: 15px;
+        /* 버튼5개->150px 사용(여백130px)*/
+        background-color: rgb(255, 0, 0); /* 빨간색 */
+        border-radius: 50%; /* 원 형태 */
+        cursor: pointer; /* 클릭 가능한 느낌 */
+    }
+
+
+    .outer-five-button { /* 좌우 280px 사용 */
+        width: 30px; 
+        height: 30px;
+        /* 버튼5개->150px 사용(여백130px)*/
+        margin-right: 20px;
+        /* 버튼 5개 -> 50px남음 (30px*5+20px*4 = 230px 사용중)*/
+        
+        border-radius: 50%; /* 원형으로 만들기 */
+        padding: 0;
+        border: 3px solid transparent; /* 원본 테두리는 투명 */
+        background-color: transparent; /* 배경색을 투명하게 */
+        cursor: pointer;
+    }
+
+    /* 작은 빨간색 원 */
+    .inner-circle {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%; /* 원 형태 */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* 슬라이더 컨테이너 */
+    .slider-container {
+        margin-top: 10px;
+        margin-left: 5%;
+    }
+    input[type="range"] {
+      width: 85%; /* 슬라이더 너비 */
+      accent-color: rgb(133, 9, 71); /* 슬라이더 색상 */
+    }
+
+
+
+    </style>
+</head>
+<body>
+    <div style="width: 40%; height: 40%; display: flex; align-items: flex-start;">
+        <div id="eyeline" style="background-color: crimson; width: 500px; padding: 10px;">
+        
+            <!-- 이미지를 포함한 첫 번째 네모칸 -->
+            <div class="slider-box" style="background-color: rgb(26, 167, 50);">
+                <div class="slider-label">이미지</div>
+
+                <div class="image-container" style="background-color: #d9ff01;">
+
+                    <div class="outer-circle" style="border-color: #00000000; margin-left: 25px;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #b66464d8;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000; margin-right: 0px;">
+                        <div class="inner-circle"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 이미지를 포함한 첫 번째 네모칸 -->
+            <div class="slider-box" style="background-color: rgb(26, 167, 50);">
+                <div class="slider-label">이미지</div>
+                <div class="image-container" style="background-color: #d9ff01;">
+
+                    <div class="outer-circle" style="border-color: #00000000; margin-left: 25px;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #000000dc;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000; margin-right: 0px;">
+                        <div class="inner-circle"></div>
+                    </div>
+                </div>
+
+                <div class="image-container" style="background-color: #d9ff01;">
+
+                    <div class="outer-circle" style="border-color: #00000000; margin-left: 50px;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #f5f5f5dc;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000;">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <div class="outer-circle" style="border-color: #00000000; margin-right: 0px;">
+                        <div class="inner-circle"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 첫 번째 슬라이더가 포함된 네모칸 -->
+            <div class="slider-box">
+                <div class="slider-label">슬라이더 1</div>
+                <div class="slider-container">
+                <input id="sliderValue1" type="range" min="0" max="100" value="0" />
+                </div>
+            </div>
+
+            <!-- 두 번째 슬라이더가 포함된 네모칸 -->
+            <div class="slider-box">
+                <div class="slider-label">슬라이더 2</div>
+                <div class="slider-container">
+                    <input id="sliderValue2" type="range" min="0" max="100" value="0" />
+                </div>
+            </div>
+
+            <!-- 세 번째 슬라이더가 포함된 네모칸 -->
+            <div class="slider-box">
+                <div class="slider-label">슬라이더 3</div>
+                <div class="slider-container">
+                    <input id="sliderValue3" type="range" min="0" max="100" value="0" />
+                </div>
+            </div>
+
+            <!-- 네 번째 슬라이더가 포함된 네모칸 -->
+            <div class="slider-box">
+                <div class="slider-label">슬라이더 4</div>
+                <div class="slider-container">
+                    <input id="sliderValue4" type="range" min="0" max="100" value="0" />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>원 구현</title>
+  <style>
+    /* 페이지 전체를 중앙 정렬 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    /* 큰 원 */
+    .outer-circle {
+      width: 200px;
+      height: 200px;
+      border: 10px solid transparent; /* 초기 테두리는 투명 */
+      border-radius: 50%; /* 원 형태 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 빨간색 내부 원 */
+    .inner-circle {
+      width: 100px;
+      height: 100px;
+      background-color: rgb(255, 0, 0); /* 빨간색 */
+      border-radius: 50%; /* 원 형태 */
+      cursor: pointer; /* 클릭 가능한 느낌 */
+    }
+  </style>
+</head>
+<body>
+  <div class="outer-circle">
+    <div class="inner-circle" onclick="copyColorToOuter(this)"></div>
+  </div>
+
+  <script>
+    // 작은 빨간색 원을 클릭하면 그 색을 큰 원의 테두리 색으로 반영하는 함수
+    function copyColorToOuter(innerElement) {
+      // 빨간색 원의 배경색을 읽어오기
+      const innerColor = window.getComputedStyle(innerElement).backgroundColor;
+      
+      // 큰 원의 테두리 색상 변경
+      const outerCircle = document.querySelector('.outer-circle');
+      outerCircle.style.borderColor = innerColor; // 큰 원의 테두리 색상을 빨간색 원의 색으로 변경
+    }
+  </script>
+</body>
+</html>
