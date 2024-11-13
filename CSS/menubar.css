@@ -1,0 +1,74 @@
+@font-face {
+    font-family: 'MapleStoryBold';
+    src: url('/font/MaplestoryBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.global-menubar {
+    display: flex;
+    justify-content: center;
+    background-color: #1e80ff;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-href, .dropbtn {
+    font-family: 'MapleStoryBold';
+    background-color: #1e80ff;
+    color: #15497e;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 0 10px; 
+    font-size: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    text-shadow: 
+        -1px -1px 0 #ffffff,  
+        1px -1px 0 #ffffff,
+        -1px 1px 0 #ffffff,
+        1px 1px 0 #ffffff; /* 흰색 테두리 효과 */
+}
+
+
+.dropdown-content a {
+    font-family: 'MapleStoryBold';
+    background-color: #1e80ff;
+    color: #154069;
+    padding: 10px 20px; /* 드롭다운 항목의 패딩을 드롭다운 버튼과 일치시킴 */
+    display: block; /* 드롭다운 항목이 블록 요소로 표시되도록 */
+    text-decoration: none;
+    text-shadow: 
+        -1px -1px 0 #ffffff,  
+        1px -1px 0 #ffffff,
+        -1px 1px 0 #ffffff,
+        1px 1px 0 #ffffff; /* 흰색 테두리 효과 */
+}
+
+.nav-href:hover, .dropbtn:hover, .dropdown-content a:hover {
+    background-color: #00bfff;
+    transform: scale(1.05);
+}
+
+.nav-href:active, .dropbtn:active, .dropdown-content a:active {
+    transform: scale(0.95);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #1e80ff;
+    border-radius: 5px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}

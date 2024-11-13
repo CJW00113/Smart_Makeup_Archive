@@ -75,62 +75,8 @@ def hex_to_bgr(hex_code):
     # BGR 형식으로 반환
     return (b, g, r)
 
-def load_params():
-    """파일에서 파라미터를 읽어와 params 딕셔너리를 초기화합니다."""
-    global params
-    try:
-        with params_lock:
-            with open(params_file, "r") as f:
-                lines = f.readlines()
-                for line in lines:
-                    key, value = line.strip().split("=")
-                    if value.startswith("(") and value.endswith(")"):  # 튜플 형식으로 저장된 경우
-                        params[key] = tuple(map(int, value.strip("()").split(",")))     # 튜플 내부는 INT
-                    else:
-                        params[key] = str(value)    # 이외의 형태는 str로 저장
-    except FileNotFoundError:
-        params = {}  # 파일이 없으면 빈 딕셔너리로 초기화
 
-def set_TxtValue(key, value):
-
-    # 모든 값을 문자열로 변환
-    value = str(value)
-
-    """키와 값을 설정하고 params.txt에 기록합니다. 주어진 키의 값은 갱신합니다."""
-    # 파일에서 현재 값을 읽어옵니다.
-    try:
-        with open(params_file, "r") as f:
-            for line in f:
-                k, v = line.strip().split("=")
-                params[k] = v
-    except FileNotFoundError:
-        pass  # 파일이 없으면 무시
-
-    # 주어진 키가 이미 존재하는 경우 값을 변경
-    if key in params:
-        if isinstance(value, tuple):  # 튜플이면 괄호 추가
-            params[key] = f"({','.join(map(str, value))})"
-        else:
-            params[key] = value  # 문자열로 저장
-    else:
-        # 새로운 키일 경우 기존 방식으로 추가
-        if isinstance(value, tuple):  # 튜플이면 괄호 추가
-            params[key] = f"({','.join(map(str, value))})"
-        else:
-            params[key] = value  # 문자열로 저장
-
-    # 파일에 모든 키-값 쌍을 기록합니다.
-    with params_lock:
-        with open(params_file, "w") as f:
-            for k, v in params.items():
-                f.write(f"{k}={v}\n")  # 기록
-
-
-
-
-
-
-# 값을 비동기적으로 설정하는 함수
+# 값을 설정하는 함수
 def set_value(key, value):
     if key not in data_store:
         raise ValueError(f"Invalid key: {key}")
@@ -167,10 +113,6 @@ def set_value(key, value):
         data_store[key] = value
         print(f"Updated {key}: {data_store[key]}")
 
-    # lip_bgr, fd_bgr 값도 항상 최신 상태로 출력
-    print(f"Current lip_bgr: {data_store['lip_bgr']}")
-    print(f"Current fd_bgr: {data_store['fd_bgr']}")
-
 # 값을 비동기적으로 가져오는 함수
 def get_value(key):
     if key not in data_store:
@@ -193,9 +135,7 @@ class LIP(BaseModel):
 
 @app.post("/FdSlider") # Fd_opacity
 async def slider_data(data: Foundation):
-    set_TxtValue("Fd_opacity", data.opacity)
-
-    # 비동기 큐 생성
+    # 큐 생성
     set_value("fd_opacity", data.opacity)     # FD opacity to 85%
 
     print("Received:", data.opacity, type(data.opacity))
@@ -205,10 +145,8 @@ async def slider_data(data: Foundation):
 async def slider_data(data: Foundation):
     print(params_file, data.hex, type(data.hex))
     bgr_color = hex_to_bgr(data.hex)
-    set_TxtValue("Fd_hex", data.hex)
-    set_TxtValue("Fd_bgr_color", bgr_color)
 
-    # 비동기 큐 생성
+    # 큐 생성
     set_value("fd_hex", data.hex)   # SteelBlue color for fd_hex
 
     print(f"bgr = {bgr_color}")
@@ -216,9 +154,8 @@ async def slider_data(data: Foundation):
 
 @app.post("/LipSlider") # Lip_opacity
 async def slider_data(data: LIP):
-    set_TxtValue("Lip_opacity", data.opacity)
 
-    # 비동기 큐 생성
+    # 큐 생성
     set_value("lip_opacity", data.opacity)    # Lip opacity to 75%
 
     print("Received:", data.opacity, type(data.opacity))
@@ -228,10 +165,8 @@ async def slider_data(data: LIP):
 async def slider_data(data: LIP):
     print(params_file, data.hex, type(data.hex))
     bgr_color = hex_to_bgr(data.hex)
-    set_TxtValue("Lip_Hex", data.hex)
-    set_TxtValue("Lip_bgr_color", bgr_color)
 
-    # 비동기 큐 생성
+    # 큐 생성
     set_value("lip_hex", data.hex)  # Tomato color for lip_hex
 
     print(f"bgr = {bgr_color}")
@@ -246,8 +181,8 @@ async def shutdown():
     return {"message": "서버가 종료됩니다."}
 
 def putText_frames(frame_copy, text, color, yArea):
-    # if not isinstance(text, str):
-    #     text = str(text)
+    if not isinstance(text, str):
+        text = str(text)
     if text == '0':
         return
     return cv2.putText(frame_copy, text, (10, yArea), 
@@ -255,7 +190,6 @@ def putText_frames(frame_copy, text, color, yArea):
                        color, 2)
 
 async def video_feed(websocket: WebSocket):
-
     """ 웹소켓을 통해 웹캠 영상을 클라이언트에 스트리밍하는 함수 """
     await websocket.accept()
     # 웹캠 비디오 캡처 초기화
@@ -271,49 +205,34 @@ async def video_feed(websocket: WebSocket):
             if not ret: # 프레임을 못읽었다면, break
                 break
 
-            # 값 가져오기
+            # 값 가져오기 (opacity->INT, bgr->TUPLE, hex->STR)
             lip_bgr = get_value("lip_bgr")
-            lip_hex = get_value("lip_hex")
+            # lip_hex = get_value("lip_hex")
             fd_bgr = get_value("fd_bgr")
-            fd_hex = get_value("fd_hex")
+            # fd_hex = get_value("fd_hex")
             lip_opacity = get_value("lip_opacity")
             fd_opacity = get_value("fd_opacity")
 
-            # 한 번에 모든 값과 타입 출력
-            print(
-                f"lip_bgr: {lip_bgr}, 타입: {type(lip_bgr)} | "
-                f"lip_hex: {lip_hex}, 타입: {type(lip_hex)} | "
-                f"fd_opacity: {fd_opacity}, 타입: {type(fd_opacity)} | "
-                f"lip_opacity: {lip_opacity}, 타입: {type(lip_opacity)} | "
-                f"fd_bgr: {fd_bgr}, 타입: {type(fd_bgr)} | "
-                f"fd_hex: {fd_hex}, 타입: {type(fd_hex)}"
-            )
+            # # 한 번에 모든 값과 타입 출력 (확인용)
+            # print(
+            #     f"lip_bgr: {lip_bgr}, 타입: {type(lip_bgr)} | "
+            #     f"lip_hex: {lip_hex}, 타입: {type(lip_hex)} | "
+            #     f"fd_opacity: {fd_opacity}, 타입: {type(fd_opacity)} | "
+            #     f"lip_opacity: {lip_opacity}, 타입: {type(lip_opacity)} | "
+            #     f"fd_bgr: {fd_bgr}, 타입: {type(fd_bgr)} | "
+            #     f"fd_hex: {fd_hex}, 타입: {type(fd_hex)}"
+            # )
 
-            load_params()  # 주기적으로 매개변수 읽기
-            # # 매개변수를 텍스트로 출력
-            # opacity:str / hex:str / bgr_color:Tuple(int,int,int)
-            if params['Fd_opacity'] == "100":
-                putText_frames(frame, "MAX", (0,255,255), 30)
+            # fd_opacity 처리
+            if fd_opacity == "100":
+                putText_frames(frame, "MAX", (0, 255, 255), 30)
             else:
-                putText_frames(frame, f"opacity: {params['Fd_opacity']}", params['Fd_bgr_color'], 30)
-
-            if params['Lip_opacity'] == "100":
-                putText_frames(frame, "MAX", (0,255,255), 60)
+                putText_frames(frame, f"FDopacity: {fd_opacity}", fd_bgr, 30)
+            # lip_opacity 처리
+            if lip_opacity == "100":
+                putText_frames(frame, "MAX", (0, 255, 255), 60)
             else:
-                putText_frames(frame, f"opacity: {params['Lip_opacity']}", params['Lip_bgr_color'], 60)
-
-
-
-            # # fd_opacity 처리
-            # if fd_opacity == "100":
-            #     putText_frames(frame, "MAX", (0, 255, 255), 30)
-            # else:
-            #     putText_frames(frame, f"FDopacity: {fd_opacity}", fd_bgr, 30)
-            # # lip_opacity 처리
-            # if lip_opacity == "100":
-            #     putText_frames(frame, "MAX", (0, 255, 255), 60)
-            # else:
-            #     putText_frames(frame, f"LIPopacity: {lip_opacity}", lip_bgr, 60)
+                putText_frames(frame, f"LIPopacity: {lip_opacity}", lip_bgr, 60)
 
 
 
@@ -359,13 +278,6 @@ def is_camera_in_use(camera_index=0):
 
 ## 서버 실행 명령어 uvicorn main:app --reload
 if __name__ == "__main__":
-    # txt 초기값
-    set_TxtValue("Fd_opacity",0)
-    set_TxtValue("Fd_hex","#000000")
-    set_TxtValue("Fd_bgr_color",hex_to_bgr("#000000"))
-    set_TxtValue("Lip_opacity",0)
-    set_TxtValue("Lip_Hex","#000000")
-    set_TxtValue("Lip_bgr_color",hex_to_bgr("#000000"))
 
     ## 뒤에 있어야함. 그래야  txt 초기화 코드가 실행됨, 근데뭔가뭔가하자가있는듯함뭔가뭔가임기분탓같은데뭔가뭔가뭔가임
     uvicorn.run(app, port=8080)

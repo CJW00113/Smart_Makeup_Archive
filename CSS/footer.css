@@ -1,0 +1,88 @@
+/* 이미지 제목 폰트 */
+@font-face {
+    font-family: 'CreamyBold';
+    src: url('/font/samlip-creamy-white-regular.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 기본 폰트 */
+@font-face {
+    font-family: 'FlightSansOTF';
+    src: url('/font/FlightSansOTF-Bold.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 화면 전체 높이를 확보 */
+    background-color: #f0f8ff; /* 기존 배경색 유지 */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    flex: 1; /* 남은 공간을 채움 */
+    padding-bottom: 20px; /* footer와의 여백 확보 */
+}
+
+/* footer 스타일은 기존과 같게 유지 */
+footer {
+    margin-top: 20px;
+    background-color: #1e80ff;
+    color: white;
+    font-size: 14px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.gitIcon {
+    margin-top: 20px;
+    height: 3em;
+    width: auto;
+}
+
+.footer_left {
+    width: 20%;
+}
+
+.footer_middle_left {
+    text-align: center;
+    width: 10%;
+}
+
+.overlay-text-small_one {
+    margin-top: 20px;
+    font-family: 'CreamyBold';
+    text-shadow: 3px 3px 5px rgba(16, 141, 158, 0.5);
+    user-select: none;
+    line-height: 0.5;
+    color: white;
+}
+
+.overlay-text-small_two {
+    font-family: 'CreamyBold';
+    text-shadow: 3px 3px 5px rgba(16, 141, 158, 0.5);
+    user-select: none;
+    color: white;
+}
+
+.footer_middle {
+    text-align: center;
+    width: 40%;
+    
+}
+.footer_middle p{
+    font-family: 'FlightSansOTF';
+}
+.footer_mark {
+    width: 5%;
+}
+
+.footer_right {
+    width: 25%;
+}

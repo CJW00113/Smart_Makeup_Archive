@@ -1,0 +1,35 @@
+/* 카드들 레이아웃 */
+.cards-container {
+    display: flex;
+    justify-content: center; /* 카드들을 중앙에 정렬 */
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.card {
+    width: 18rem;
+}
+
+/* 버튼 스타일 */
+.nav-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 반응형 개선 */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

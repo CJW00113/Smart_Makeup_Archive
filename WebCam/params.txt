@@ -1,6 +1,6 @@
 Lip_bgr_color=(0, 0, 0)
 Lip_Hex=#000000
-Fd_opacity=0
-Fd_hex=#000000
-Fd_bgr_color=(0, 0, 0)
+Fd_opacity=45
+Fd_hex=#00ff00
+Fd_bgr_color=(0, 255, 0)
 Lip_opacity=0

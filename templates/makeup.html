@@ -3,42 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>화장 미리보기</title>
+    <title>Makeup Page</title>
     <link rel="stylesheet" th:href="@{/CSS/menubar.css}">
     <link rel="stylesheet" th:href="@{/CSS/footer.css}">
-    <style>
-        #webcam {
-            width: 640px;
-            height: 480px;
-            background-color: black; /* 초기 검정색 배경 */
-            display: block; /* 비디오 요소를 항상 표시 */
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/CSS/makeup.css}">
 </head>
 <body>
+    <!-- 메뉴바 -->
     <div th:replace="~{menubar.html::global-menubar}"></div>
-   
 
-    <video id="webcam" autoplay></video>
-    <button id="startButton">웹캠 연결</button>
+    <div style="margin-top: 50px;"></div> <!-- 공백 -->
 
-    <form action="/opt" method="POST" id="myForm">
-        <input type="range" id="slider" min="0" max="100" value="0" name="opts">
-        <p>슬라이더 값: <span id="sliderValue">0</span></p>
+    <div style="display: flex;">
+        <!--왼쪽 칸-->
+        <div style="width: 60%;">
+            <!--캠 연결 버튼-->
+            <div style="width: 655px; height: 50px; float: right;">
+                <p style="display: inline-block; margin-top: 10px;">
+                    <button id="CamBtn" class="sky-button">카메라 연결</button>
+                </p>
+            </div>
 
-    </form>
-    <script>
-        const slider = document.getElementById('slider');
-        const sliderValue = document.getElementById('sliderValue');
-        const form = document.getElementById('myForm');
-    
-        slider.addEventListener('input', function() {
-            sliderValue.textContent = slider.value; // 슬라이더 값 업데이트
-            form.submit();
+            <!--캠이 출력되는 이미지-->
+            <div style="float: right; margin: 10px 15px 10px 10px;"> <!--위, 오른쪽, 아래, 왼쪽 여백 순서-->
+                <div class="webcamStream">
+                    <img id="video" style="display: none;" src="" alt="Video Feed"/>
+                </div>
+            </div>
+            <div style="width: 655px; height: 50px; float: right; display: flex; justify-content: space-between; align-items: center;">
+                <p style="margin: 0;">
+                    <button class="sky-button" id="savebtn">저장하기</button>
+                    <button class="sky-button" id="save_1">1</button>
+                    <button class="sky-button" id="save_2">2</button>
+                    <button class="sky-button" id="save_3">3</button>
+                    <button class="sky-button" id="save_4">4</button>
+                    <button class="sky-button" id="save_5">5</button>
+                </p>
+                <div style="display: flex; margin-right: 10px;">
+                    <button class="sky-button" id="loadbtn">불러오기</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--오른쪽 칸-->
+        <!--캠 화면을 제어하는 구문, 캠이 연결된 경우에 show, 아니면 hidden-->
+        <div style="width: 40%; height: 40%; display: flex; align-items: flex-start;">
+            <!--메이크업 선택 버튼-->
+            <div id="SelectMakeupButton" style="width: 300px; height: 480px; background-color: #f0f8ff; border: 2px solid #f0f8ff; margin-top: 25%; margin-left: 10px; display:none;">
+                <!--파운데이션 샐랙트 박스 이동 버튼-->
+                <div>
+                    <button id="showFdMakeupSelectBox" style="margin-left: 25px; margin-top: 0%" 
+                            title="파운데이션 바르기" >
+                        <img th:src="@{/buttonImage/skin_button.png}" style="height: 70px; width: 70px;" alt="파운데이션 버튼">
+                    </button>
+                </div>
+                <!--립 샐랙트 박스 이동 버튼-->
+                <div>
+                    <button id="showLipMakeupSelectBox" style="margin-left: 25px; margin-top: 60%" 
+                            title="립 바르기">
+                        <img th:src="@{/buttonImage/lip_button.png}" style="height: 70px; width: 70px;" alt="립 버튼">
+                    </button>
+                </div>
+                <!--아이라인 샐랙트 박스 이동 버튼 예정-->
+                <!-- <div>
+                    <button id="showEyeLineMakeupSelectBox" style="margin-left: 25px; margin-top: 40%" 
+                            title="아이라인 그리기">
+                        <img th:src="@{/buttonImage/eyeline_button.png}" style="height: 70px; width: 70px;" alt="아이라인 버튼">
+                    </button>
+                </div> -->
+            </div>
+
+            <!-- 샐랙트 박스 -->
+            <div id="MakeupSelectBox" style="display: none; width: 300px; height: 480px; background-color: #362349; border: 2px solid #000; margin-top: 60px; margin-left: 10px;">
+                <!-- 파운데이션 영역 -->
+                <div style="height: auto; display:none;" id="foundation">
+
+
+                    
+
+                    <!-- <div class="color-button-container" style="margin-top: 40px;">
+                        <button class="color-button" style="background-color: red;"></button>
+                        <button class="color-button" style="background-color: green;"></button>
+                        <button class="color-button" style="background-color: blue;"></button>
+                        <button class="color-button" style="background-color: yellow;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: orange;"></button>
+                        <button class="color-button" style="background-color: purple;"></button>
+                        <button class="color-button" style="background-color: pink;"></button>
+                        <button class="color-button" style="background-color: cyan;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: brown;"></button>
+                        <button class="color-button" style="background-color: gray;"></button>
+                        <button class="color-button" style="background-color: lightcoral;"></button>
+                        <button class="color-button" style="background-color: lightgreen;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: lightblue;"></button>
+                        <button class="color-button" style="background-color: lavender;"></button>
+                        <button class="color-button" style="background-color: gold;"></button>
+                        <button class="color-button" style="background-color: salmon;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: teal;"></button>
+                        <button class="color-button" style="background-color: navy;"></button>
+                        <button class="color-button" style="background-color: maroon;"></button>
+                        <button class="color-button" style="background-color: olive;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: coral;"></button>
+                        <button class="color-button" style="background-color: plum;"></button>
+                        <button class="color-button" style="background-color: khaki;"></button>
+                        <button class="color-button" style="background-color: chocolate;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: sienna;"></button>
+                        <button class="color-button" style="background-color: slateblue;"></button>
+                        <button class="color-button" style="background-color: mediumseagreen;"></button>
+                        <button class="color-button" style="background-color: lightsalmon;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: lightgray;"></button>
+                        <button class="color-button" style="background-color: darkorange;"></button>
+                        <button class="color-button" style="background-color: springgreen;"></button>
+                        <button class="color-button" style="background-color: violet;"></button>
+                        <div id="colorBox1" class="color-button, colorBox"></div>
+                    </div> -->
+
+                    
+                </div>
+                <!-- 립 영역 -->
+                <div  style="height: auto; display:none;" id="lip">
+                    <div class="color-button-container" style="margin-top: 30px;">
+                        <button class="color-button" style="background-color: red;"></button>
+                        <button class="color-button" style="background-color: green;"></button>
+                        <button class="color-button" style="background-color: blue;"></button>
+                        <button class="color-button" style="background-color: yellow;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: orange;"></button>
+                        <button class="color-button" style="background-color: purple;"></button>
+                        <button class="color-button" style="background-color: pink;"></button>
+                        <button class="color-button" style="background-color: cyan;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: brown;"></button>
+                        <button class="color-button" style="background-color: gray;"></button>
+                        <button class="color-button" style="background-color: lightcoral;"></button>
+                        <button class="color-button" style="background-color: lightgreen;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: lightblue;"></button>
+                        <button class="color-button" style="background-color: lavender;"></button>
+                        <button class="color-button" style="background-color: gold;"></button>
+                        <button class="color-button" style="background-color: salmon;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: teal;"></button>
+                        <button class="color-button" style="background-color: navy;"></button>
+                        <button class="color-button" style="background-color: maroon;"></button>
+                        <button class="color-button" style="background-color: olive;"></button>
+                    </div>
+                    <div class="color-button-container">
+                        <button class="color-button" style="background-color: coral;"></button>
+                        <button class="color-button" style="background-color: plum;"></button>
+                        <button class="color-button" style="background-color: khaki;"></button>
+                        <button class="color-button" style="background-color: chocolate;"></button>
+                        <div id="colorBox2" class="color-button, colorBox"></div>
+                    </div>
+                </div>
+
+                <!--슬라이더-->
+                <div>
+                    <div style= "margin-top: 10px; margin-left: 20px; ">
+                        <input id="sliderValue" type="range" min="0" max="100" value="0" oninput="sliderevent(this.value)" style="accent-color: rgb(133, 9, 71); width: 90%;" />
+                    </div>
+                </div>
+
+                <!--닫기버튼-->
+                <div>
+                    <div class="container mt-3">
+                        <button class="btn" id="closeBtn" style="background-color: rgb(255, 255, 255); font-size: 12px; width: 50px; height: 30px; color: red; float: right; margin-right: 15px;">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 150px;"></div> <!--공백-->
+
+    <footer>
+        <div class="footer_left">
+        </div>
+
+        <div class="footer_middle_left">
+            <a href="/index" style="text-decoration: none;">
+                <h1 class="overlay-text-small_one">Smart</h1>
+                <h1 class="overlay-text-small_two">Makeup</h1>
+            </a>
+        </div>
+
+        <div class="footer_middle">
+            <p style="line-height: 1.0;">© 2024 모든 권리 보유</p>
+            <p style="line-height: 0.5;">스마트 메이크업</p>
+            <p style="line-height: 0.5;"> 제작: 최준원, 한기윤, 현호성</p>
+            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 Smart_IoT_Vanity를 Web으로 구현한 사이트입니다.</p>
+        </div>
+
+        <div class="footer_mark">
+            <a href="https://github.com/hosunghyun/Smart_Makeup_Web">
+                <img th:src="@{/sysimg/git_icon.png}" class="gitIcon" >
+            </a>
+        </div>
+
+        <div class="footer_right">
+        </div>
+    </footer>
+
+    <script th:src="@{/JS/makeup/makeupvariable.js}"></script>
+    <script th:src="@{/JS/makeup/makeup.js}"></script>
+    <script th:inline="javascript">
+        function loadDataMakeup() {
+            fetch(`/loadmakeup`, {
+                method : 'POST',
+                headers : { "Content-Type" : "application/json" },
+                body : JSON.stringify({"number" : whatNumber})
+            })
+            .then((response) => { return response.json()})
+            .then((makeups) => {
+                makeups.forEach(makeup=>{
+                    if(`${makeup.category}` == "fundation") {
+                        Fdslider = `${makeup.opacity}`;
+                        FdwhatColor = `${makeup.color_code}`;
+                        whatBtn = "Fd";
+                        sliderevent(Fdslider);
+                        colorevent(FdwhatColor);
+                        if (FdwhatColor == "#00000000") {
+                            $colorBox1.style.backgroundImage = 'linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1))';
+                            $colorBox1.style.backgroundSize = '10px 10px';
+                        }
+                        else {
+                            $colorBox1.style.backgroundImage = "none";
+                        }
+
+                    }
+                    else if(`${makeup.category}` == "lipstick") {
+                        Lipslider = `${makeup.opacity}`;
+                        LipwhatColor = `${makeup.color_code}`;
+                        whatBtn = "Lip";
+                        sliderevent(Lipslider);
+                        colorevent(LipwhatColor);
+                        if (LipwhatColor == "#00000000") {
+                            $colorBox2.style.backgroundImage = 'linear-gradient(135deg, transparent 25%, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.1) 50%, transparent 50%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1))';
+                            $colorBox2.style.backgroundSize = '10px 10px';
+                        }
+                        else {
+                            $colorBox2.style.backgroundImage = "none";
+                        }
+                    }
+                    // else if(`${makeup.category}` == "eyeline") {
+                    //     EyeLineslider = `${makeup.opacity}`;
+                    //     EyeLinewhatColor = `${makeup.color_code}`;
+                    //     whatBtn = "EyeLine";
+                    //     sliderevent(EyeLineslider);
+                    //     colorevent(EyeLinewhatColor);
+                    // }
+                });
+            })
+            .catch((Error) => {
+                console.error('Error:', Error); // 에러 처리
+            });
+        }
+
+        $loadbtn.addEventListener('click', ()=>{
+            $SelectMakeupButton.style.display = "block";
+            $MakeupSelectBox.style.display = "none";
+            $foundation.style.display = "none";
+            $lip.style.display = "none";
+            if(isNumberClick == true) {
+                loadDataMakeup();
+            }
+            else {
+                alert('저장할 버튼을 클릭해주세요');
+            }
         });
     </script>
+    
 
-    <script src="/webcam.js">
-    </script>
+    <!-- 부트스트랩 JS (옵션) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

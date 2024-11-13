@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <h5 class="card-title">화장품명</h5>
                         <p class="card-text">화장품 가격</p>
-                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                        <a href="#" class="btn btn-primary" target="_blank">구매하러 가기</a>
                     </div>
                 </div>
 
@@ -40,7 +40,7 @@
                     <div class="card-body">
                         <h5 class="card-title">화장품명</h5>
                         <p class="card-text">화장품 가격</p>
-                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                        <a href="#" class="btn btn-primary" target="_blank">구매하러 가기</a>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@
                     <div class="card-body">
                         <h5 class="card-title">화장품명</h5>
                         <p class="card-text">화장품 가격</p>
-                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                        <a href="#" class="btn btn-primary" target="_blank">구매하러 가기</a>
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@
                     <div class="card-body">
                         <h5 class="card-title">화장품명</h5>
                         <p class="card-text">화장품 가격</p>
-                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                        <a href="#" class="btn btn-primary" target="_blank">구매하러 가기</a>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
                     <div class="card-body">
                         <h5 class="card-title">화장품명</h5>
                         <p class="card-text">화장품 가격</p>
-                        <a href="#" class="btn btn-primary">구매하러 가기</a>
+                        <a href="#" class="btn btn-primary" target="_blank">구매하러 가기</a>
                     </div>
                 </div>
             </div>
@@ -111,37 +111,64 @@
     <script th:inline="javascript">
         (() => {
             /*<![CDATA[*/ 
-            const img1 = document.getElementById("img1");
-            const img2 = document.getElementById("img2");
-            const img3 = document.getElementById("img3");
-            const img4 = document.getElementById("img4");
-            const img5 = document.getElementById("img5");
             const prebtn = document.getElementById("prebtn");
             const nextbtn = document.getElementById("nextbtn");
+
+            const imgs = document.querySelectorAll('[id^="img"]');
+            const productsname = document.querySelectorAll(".card-title");
+            const prices = document.querySelectorAll(".card-text");
+            const shoplinks = document.querySelectorAll(".btn-primary");
+
             const images = /*[[${images}]]*/ [];
+            const productname = /*[[${productname}]]*/ [];
+            const price = /*[[${price}]]*/ [];
+            const productlink = /*[[${productlink}]]*/ [];
 
             let index = 0;
 
-            function updateImages() {
-                img1.src = images[(index + 0) % images.length];
-                img2.src = images[(index + 1) % images.length];
-                img3.src = images[(index + 2) % images.length];
-                img4.src = images[(index + 3) % images.length];
-                img5.src = images[(index + 4) % images.length];
+            function updateCards() {
+                let cnt = 0;
+
+                // 이미지 변경
+                imgs.forEach(img => {
+                    img.src = images[(index + cnt) % images.length];
+                    cnt += 1;
+                });
+                cnt = 0;
+
+                // 제품명 변경
+                productsname.forEach(name => {
+                    name.textContent = productname[(index + cnt) % productname.length];
+                    cnt += 1;
+                });
+                cnt = 0;
+
+                // 제품 가격 변경
+                prices.forEach(printprice => {
+                    printprice.textContent = price[(index + cnt) % price.length].toLocaleString() + " 원"; 
+                    cnt += 1;
+                });
+                cnt = 0;
+
+                // 제품 구매 링크 변경
+                shoplinks.forEach(shoplink => {
+                    shoplink.href = productlink[(index + cnt) % productlink.length]; 
+                    cnt += 1;
+                });
             }
 
             document.addEventListener('DOMContentLoaded', () => {
-                updateImages(); // 페이지 로드 시 이미지 설정
+                updateCards()
             });
 
             prebtn.addEventListener('click', () => {
                 index = (index - 1 + images.length) % images.length; // 인덱스를 감소하고, 순환
-                updateImages(); // 이미지 업데이트
+                updateCards()
             });
 
             nextbtn.addEventListener('click', () => {
                 index = (index + 1) % images.length; // 인덱스를 증가하고, 순환
-                updateImages(); // 이미지 업데이트
+                updateCards()
             });
             /*]]>*/
         })();

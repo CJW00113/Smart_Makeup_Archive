@@ -13,11 +13,11 @@
 
     <style>
         body {
-            background-color: #121212;
+            background-color: #ffffff;
             color: white;
         }
         .card {
-            background-color: #1e1e1e;
+            background-color: #4690f1;
             border: none;
             max-width: 400px; /* 카드 최대 너비 설정 */
             margin: auto; /* 중앙 정렬 */
@@ -44,11 +44,11 @@
     <div class="container mt-5">
         <div class="card">
             <h2 class="text-center" style="color: white;">회원 가입</h2>
-            <form action="/join_in" method="POST">
+            <form action="/join_in" method="POST" id="joinform">
                 <div class="mb-3">
                     <label for="member_id" class="form-label" style="color: white;">아이디</label>
                     <input type="text" name="member_id" id="member_id" class="form-control" required>
-                    <button type="button" id="check_overlap" class="btn btn-link">중복확인</button>
+                    <button type="button" id="check_overlap" class="btn btn-custom" style="color: white; margin-top: 10px;">중복확인</button>
                 </div>
                 <div class="mb-3">
                     <label for="member_password" class="form-label" style="color: white;">비밀번호</label>
@@ -62,7 +62,7 @@
                     <label for="phone" class="form-label" style="color: white;">전화번호</label>
                     <input type="tel" name="phone" id="phone" class="form-control" required placeholder="010-1111-1111">
                 </div>
-                <button type="submit" class="btn btn-custom">회원가입</button>
+                <button type="button" class="btn btn-custom" id="submitbtbn">회원가입</button>
             </form>
         </div>
     </div>

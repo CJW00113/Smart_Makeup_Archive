@@ -13,11 +13,11 @@
 
     <style>
         body {
-            background-color: #121212;
+            background-color: #ffffff;
             color: white;
         }
         .card {
-            background-color: #1e1e1e;
+            background-color: #4690f1;
             border: none;
             max-width: 600px; /* 카드 최대 너비 설정 */
             margin: auto; /* 중앙 정렬 */
@@ -30,6 +30,10 @@
         .btn-custom:hover {
             background-color: #0056b3;
         }
+        img {
+            height: 10rem;
+            width: 10rem;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +44,7 @@
     <div class="container mt-5">
         <div class="card">
             <h2 class="text-center" style="color: white;">글 수정하기</h2>
-            <form th:action="@{/write}" method="POST" enctype="multipart/form-data">
+            <form th:action="@{/editboard?id=} + ${board.getId()}" method="POST" enctype="multipart/form-data" id="myForm">
                 <div class="mb-3">
                     <label for="title" class="form-label" style="color: white;">제목</label>
                     <input type="text" name="title" id="title" th:value="${board.getTitle()}" class="form-control" required>
@@ -49,9 +53,10 @@
                     <label for="imageInput" class="form-label" style="color: white;">이미지</label>
                     <input type="file" id="imageInput" name="imageInput" accept="image/*" multiple class="form-control">
                     <div th:each="image : ${board.getImages()}">
-                        <input type="checkbox" th:name="'img_'+ ${image.getId()}" th:id="'img_'+ ${image.getId()}">
                         <img th:src="${image.getImage_link()}" alt="">
+                        <button type="button" th:id="'imgbtn_' + ${image.getId()}" class="btn btn-custom">삭제</button>
                     </div>
+                    <input type="hidden" name="deleteimg" id="arrayData"> <!-- 자바스크립트 데이터를 함께 전송 -->
                 </div>
                 <div class="mb-3">
                     <label for="content" class="form-label" style="color: white;">본문</label>
@@ -59,7 +64,7 @@
                 </div>
                 
                 <div class="d-flex justify-content-between">
-                    <button type="button" id="okbtn" class="btn btn-custom">확인</button>
+                    <button type="submit" id="okbtn" class="btn btn-custom">확인</button>
                     <button type="button" id="escbtn" class="btn btn-custom">취소</button>
                 </div>
             </form>
@@ -93,5 +98,7 @@
         <div class="footer_right">
         </div>
     </footer>
+
+    <script th:src="@{/JS/edit/edit.js}"></script>
 </body>
 </html>

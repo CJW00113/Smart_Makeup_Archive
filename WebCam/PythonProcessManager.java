@@ -13,7 +13,6 @@ public class PythonProcessManager {
                 if (pid != null) {
                     terminateProcess(pid);
                     System.out.println("PID: " + pid + " 종료 완료");
-                    Thread.sleep(1500); // 5초 대기
                 } else {
                     System.out.println("No Python process found.");
                     break; // pid가 null이면 반복 종료
@@ -22,7 +21,7 @@ public class PythonProcessManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
     }
 
     // 실행 중인 Python 프로세스의 PID를 반환하는 함수

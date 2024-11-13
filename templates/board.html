@@ -31,68 +31,64 @@
     <!-- 메뉴바 -->
     <div th:replace="~{menubar.html::global-menubar}"></div>
 
-    <div class="container mt-5">
-        <h1 class="mb-4">게시판</h1>
         
-        <!-- 게시판 불러오기 -->
-        <div class="row">
-            <div th:each="board : ${boards}">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a th:href="@{|/boarddetail/id=${board.getId()}|}" class="text-decoration-none text-dark">
-                            <!-- 이미지 출력 부분 -->
-                            <div th:each="image, iterStat : ${board.getImages()}" th:if="${iterStat.index == 0}">
-                                <div th:if="${image.getImage_link() != null}">
-                                    <img th:src="${image.getImage_link()}" class="card-img-top board-img" alt="이미지">
+        <div class="container mt-5">
+            <h1 class="mb-4">화장품 톡톡</h1>
+            
+            <!-- 게시판 불러오기 -->
+            <div class="row">
+                <div th:each="board : ${boards}">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <a th:href="@{|/boarddetail/id=${board.getId()}|}" class="text-decoration-none text-dark">
+                                <!-- 이미지 출력 부분 -->
+                                <div th:each="image, iterStat : ${board.getImages()}" th:if="${iterStat.index == 0}">
+                                    <div th:if="${image.getImage_link() != null}">
+                                        <img th:src="${image.getImage_link()}" class="card-img-top board-img" alt="이미지">
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <!-- 게시판 네모칸 -->
-                            <div class="card-body">
-                                <!-- 게시판 제목 -->
-                                <h5 class="card-title" th:text="${board.getTitle()}">제목</h5> 
-                                <!-- 게시판 작성자 -->
-                                <p class="card-text" th:text="${board.getMember().getMember_id()}">작성자</p> 
-                            </div>
-                        </a>
+                                
+                                <!-- 게시판 네모칸 -->
+                                <div class="card-body">
+                                    <!-- 게시판 제목 -->
+                                    <h5 class="card-title" th:text="${board.getTitle()}">제목</h5> 
+                                    <!-- 게시판 작성자 -->
+                                    <p class="card-text" th:text="${board.getMember().getMember_id()}">작성자</p> 
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div style="display: flex; align-items: center;">
-                <div style="display: inline-block;">
-                    <div style="border: 1px solid #0056b3; border-radius: 10px; padding: 10px; display: inline-flex; align-items: center; background-color: #1b6dc5;">
-                        <!-- 페이지 입력 구문 -->
-                        <div style="margin-right: 10px;">
-                            <input type="text" name="movepage" id="movepage" style="width: 50px;">
-                        </div>
-            
-                        <div style="margin-right: 10px;">
-                            <p style="display: inline; color: wheat;">/</p>
-                        </div>
-                        <!-- 최대 페이지 개수 -->
-                        <div style="margin-right: 10px;">
-                            <p id="pageNum" style="display: inline; color: white;"></p>
-                        </div>
-                        <!-- 이동 버튼 -->
-                        <button type="button" id="movebtn" style="background-color: #0056b3; color: white; border: 1px solid #ffffff; border-radius: 5px;">
-                            <div style="margin: 3px;">
-                                이동
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <!-- 글 작성하기 버튼 -->
-                <div style="margin-left: 10px;">
-                    <button type="button" id="wbtn" class="btn btn-custom" style="background-color: #1b6dc5;">작성하기</button>
-                </div>
-            </div>
-            
         </div>
-
     </div>
 
+    <div>
+        <div style="border: 1px solid #0056b3; border-radius: 10px; padding: 10px; display: inline-flex; align-items: center; background-color: #1b6dc5;">
 
+            <!-- <div style="border: 1px solid #0056b3; border-radius: 10px; padding: 10px; display: inline-flex; align-items: center;"> -->
+            <div style="margin-right: 10px;">
+                <input type="text" name="movepage" id="movepage" style="width: 50px;" >
+            </div>
+            <div style="margin-right: 10px;">
+                <p style="display: inline; color: wheat;">/</p>
+            </div>
+            <div style="margin-right: 10px;">
+                <p id="pageNum" style="display: inline; color: white;"></p>
+            </div>
+            <div>
+                <button type="button" id="movebtn" style="background-color: #0056b3; color: white; border: 1px solid #ffffff; border-radius: 5px;">
+                    <div style="margin: 3px;">
+                        이동
+                    </div>
+                </button>
+            </div>
+        </div>
+        <!-- 글 작성하기 버튼 -->
+        <div class="d-flex justify-content-end">
+            <button type="button" id="wbtn" class="btn btn-custom" style="background-color: #1b6dc5">작성하기</button>
+        </div>
+    </div>  
 
     <footer>
         <div class="footer_left">
@@ -109,13 +105,7 @@
             <p style="line-height: 1.0;">© 2024 모든 권리 보유</p>
             <p style="line-height: 0.5;">스마트 메이크업</p>
             <p style="line-height: 0.5;"> 제작: 최준원, 한기윤, 현호성</p>
-            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 
-                <p style="line-height: 1.0;">
-                    본 사이트는 GUI로 구현한 
-                    <a href="https://chatgpt.com/" style="color: inherit; text-decoration: none;">Smart_IoT_Vanity</a>
-                    를 Web으로 구현한 사이트입니다.
-                </p>
-                를 Web으로 구현한 사이트입니다.</p>
+            <p style="line-height: 1.0;">본 사이트는 GUI로 구현한 Smart_IoT_Vanity를 Web으로 구현한 사이트입니다.</p>
         </div>
 
         <div class="footer_mark">
@@ -134,15 +124,16 @@
             const $movepage = document.getElementById("movepage");
             const $pageNum = document.getElementById("pageNum");
             const $movebtn = document.getElementById("movebtn");
-            
-            const boards = /*[[${size}]]*/'';
+            const currentURL = window.location.href;
 
-            console.log(typeof(boards));
-            console.log(typeof($movepage.value));
+            const URL = currentURL.split('=');
+
+            const boards = /*[[${size}]]*/'';
 
             const pageSize = parseInt(boards / 10) + 1;
 
             $pageNum.textContent = pageSize;
+            $movepage.value = URL[1];
 
             $movebtn.addEventListener('click', ()=>{
                 if($movepage.value >= 0 && $movepage.value <= 9 && $movepage.value <= pageSize) {

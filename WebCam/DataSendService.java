@@ -83,15 +83,4 @@ public class DataSendService {
             System.err.println("POST 요청 예외 로그 출력: " + e.getMessage());
         }
     }
-
-
-    // String을 int로 변환하는 메서드
-    public int convertStringToInt(String numberString) {
-        try {
-            return Integer.parseInt(numberString);
-        } catch (NumberFormatException e) {
-            System.out.println("유효하지 않은 정수 형식입니다: " + numberString);
-            return 0; // 또는 다른 에러 코드나 예외 처리를 할 수 있습니다.
-        }
-    }
 }
