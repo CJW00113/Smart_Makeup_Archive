@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬라이더 값 표시</title>
+</head>
+<body>
+    <h1>Spring Boot 슬라이더 값</h1>
+    <button id="fetchButton">슬라이더 값 가져오기</button>
+    <h2>서버에서 받은 값:</h2>
+    <p id="receivedValue">값이 없습니다.</p>
+
+    <script>
+        app.use((req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "http://localhost:9090"); // 허용할 출처
+            res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // 허용할 메서드
+            res.header("Access-Control-Allow-Headers", "Content-Type");
+            next();
+        });
+        document.getElementById('fetchButton').addEventListener('click', () => {
+            fetch('/api/slider')
+                .then(response => response.json())
+                .then(result => {
+                    document.getElementById('receivedValue').textContent = result.value;  // 받은 값을 표시
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                });
+        });
+    </script>
+</body>
+</html>

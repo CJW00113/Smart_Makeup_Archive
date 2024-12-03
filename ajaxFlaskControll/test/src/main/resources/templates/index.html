@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬라이더 전송</title>
+    <!-- jQuery CDN 추가 -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+</head>
+<body>
+    <h1>슬라이더로 값 전송하기</h1>
+    <input type="range" id="slider" min="0" max="100" value="50">
+    <p>현재 값: <span id="sliderValue">50</span></p>
+    <button id="sendButton">전송</button>
+
+    <script>
+        $.ajax({
+            url: 'http://localhost:8080/api/data',  // Flask 서버가 8080에서 실행 중
+            method: 'GET',
+            success: function(response) {
+                console.log('Response from Flask:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+            }
+        });
+
+
+        const slider = document.getElementById('slider');
+        const sliderValue = document.getElementById('sliderValue');
+
+        // 슬라이더 값 변경 시 업데이트
+        slider.addEventListener('input', () => {
+            sliderValue.textContent = slider.value;
+        });
+
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const value = slider.value;
+            console.log("보냄");
+            fetch('http://localhost:8080/api/slider', { // Flask 서버의 URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ value: value })
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('성공:', result);
+                alert(`Flask 서버로 전송한 값: ${result.value}`);
+            })
+            .catch(error => {
+                console.error('오류:', error);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+npm install cors
+
+pip install flask-cors
+
+
